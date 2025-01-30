@@ -1,0 +1,95 @@
+{
+  "player": {
+    "id": 162498,
+    "name": "R. Drăgușin",
+    "firstname": "Radu",
+    "lastname": "Matei Drăgușin",
+    "age": 23,
+    "birth": {
+      "date": "2002-02-03",
+      "place": "București",
+      "country": "Romania"
+    },
+    "nationality": "Romania",
+    "height": "191 cm",
+    "weight": "85 kg",
+    "injured": false,
+    "photo": "https://media.api-sports.io/football/players/162498.png"
+  },
+  "statistics": [
+    {
+      "team": {
+        "id": 47,
+        "name": "Tottenham",
+        "logo": "https://media.api-sports.io/football/teams/47.png"
+      },
+      "league": {
+        "id": 39,
+        "name": "Premier League",
+        "country": "England",
+        "logo": "https://media.api-sports.io/football/leagues/39.png",
+        "flag": "https://media.api-sports.io/flags/gb-eng.svg",
+        "season": 2023
+      },
+      "games": {
+        "appearences": 9,
+        "lineups": 4,
+        "minutes": 424,
+        "number": null,
+        "position": "Defender",
+        "rating": "6.711111",
+        "captain": false
+      },
+      "substitutes": {
+        "in": 5,
+        "out": 0,
+        "bench": 14
+      },
+      "shots": {
+        "total": 1,
+        "on": null
+      },
+      "goals": {
+        "total": 0,
+        "conceded": 0,
+        "assists": 0,
+        "saves": null
+      },
+      "passes": {
+        "total": 369,
+        "key": null,
+        "accuracy": null
+      },
+      "tackles": {
+        "total": 5,
+        "blocks": 4,
+        "interceptions": 8
+      },
+      "duels": {
+        "total": 33,
+        "won": 19
+      },
+      "dribbles": {
+        "attempts": 2,
+        "success": 1,
+        "past": null
+      },
+      "fouls": {
+        "drawn": 4,
+        "committed": 6
+      },
+      "cards": {
+        "yellow": 1,
+        "yellowred": 0,
+        "red": 0
+      },
+      "penalty": {
+        "won": null,
+        "commited": null,
+        "scored": 0,
+        "missed": 0,
+        "saved": null
+      }
+    }
+  ]
+}

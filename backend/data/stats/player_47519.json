@@ -1,0 +1,95 @@
+{
+  "player": {
+    "id": 47519,
+    "name": "Pedro Porro",
+    "firstname": "Pedro Antonio",
+    "lastname": "Porro Sauceda",
+    "age": 26,
+    "birth": {
+      "date": "1999-09-13",
+      "place": "Don Benito",
+      "country": "Spain"
+    },
+    "nationality": "Spain",
+    "height": "173 cm",
+    "weight": "69 kg",
+    "injured": false,
+    "photo": "https://media.api-sports.io/football/players/47519.png"
+  },
+  "statistics": [
+    {
+      "team": {
+        "id": 47,
+        "name": "Tottenham",
+        "logo": "https://media.api-sports.io/football/teams/47.png"
+      },
+      "league": {
+        "id": 39,
+        "name": "Premier League",
+        "country": "England",
+        "logo": "https://media.api-sports.io/football/leagues/39.png",
+        "flag": "https://media.api-sports.io/flags/gb-eng.svg",
+        "season": 2023
+      },
+      "games": {
+        "appearences": 35,
+        "lineups": 35,
+        "minutes": 3093,
+        "number": null,
+        "position": "Defender",
+        "rating": "7.345714",
+        "captain": false
+      },
+      "substitutes": {
+        "in": 0,
+        "out": 4,
+        "bench": 1
+      },
+      "shots": {
+        "total": 38,
+        "on": 12
+      },
+      "goals": {
+        "total": 3,
+        "conceded": 0,
+        "assists": 7,
+        "saves": null
+      },
+      "passes": {
+        "total": 1864,
+        "key": 51,
+        "accuracy": 42
+      },
+      "tackles": {
+        "total": 91,
+        "blocks": 18,
+        "interceptions": 34
+      },
+      "duels": {
+        "total": 304,
+        "won": 159
+      },
+      "dribbles": {
+        "attempts": 50,
+        "success": 26,
+        "past": null
+      },
+      "fouls": {
+        "drawn": 27,
+        "committed": 37
+      },
+      "cards": {
+        "yellow": 3,
+        "yellowred": 0,
+        "red": 0
+      },
+      "penalty": {
+        "won": null,
+        "commited": null,
+        "scored": 0,
+        "missed": 0,
+        "saved": null
+      }
+    }
+  ]
+}

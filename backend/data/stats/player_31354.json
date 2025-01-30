@@ -1,0 +1,95 @@
+{
+  "player": {
+    "id": 31354,
+    "name": "G. Vicario",
+    "firstname": "Guglielmo",
+    "lastname": "Vicario",
+    "age": 29,
+    "birth": {
+      "date": "1996-10-07",
+      "place": "Udine",
+      "country": "Italy"
+    },
+    "nationality": "Italy",
+    "height": "194 cm",
+    "weight": "83 kg",
+    "injured": false,
+    "photo": "https://media.api-sports.io/football/players/31354.png"
+  },
+  "statistics": [
+    {
+      "team": {
+        "id": 47,
+        "name": "Tottenham",
+        "logo": "https://media.api-sports.io/football/teams/47.png"
+      },
+      "league": {
+        "id": 39,
+        "name": "Premier League",
+        "country": "England",
+        "logo": "https://media.api-sports.io/football/leagues/39.png",
+        "flag": "https://media.api-sports.io/flags/gb-eng.svg",
+        "season": 2023
+      },
+      "games": {
+        "appearences": 38,
+        "lineups": 38,
+        "minutes": 3420,
+        "number": null,
+        "position": "Goalkeeper",
+        "rating": "7.036842",
+        "captain": false
+      },
+      "substitutes": {
+        "in": 0,
+        "out": 0,
+        "bench": 0
+      },
+      "shots": {
+        "total": null,
+        "on": null
+      },
+      "goals": {
+        "total": 0,
+        "conceded": 61,
+        "assists": 0,
+        "saves": 110
+      },
+      "passes": {
+        "total": 1372,
+        "key": null,
+        "accuracy": null
+      },
+      "tackles": {
+        "total": null,
+        "blocks": null,
+        "interceptions": 1
+      },
+      "duels": {
+        "total": 31,
+        "won": 29
+      },
+      "dribbles": {
+        "attempts": null,
+        "success": null,
+        "past": null
+      },
+      "fouls": {
+        "drawn": 8,
+        "committed": null
+      },
+      "cards": {
+        "yellow": 2,
+        "yellowred": 0,
+        "red": 0
+      },
+      "penalty": {
+        "won": null,
+        "commited": null,
+        "scored": 0,
+        "missed": 0,
+        "saved": 0
+      }
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "player": {
+    "id": 152849,
+    "name": "M. van de Ven",
+    "firstname": "Micky",
+    "lastname": "van de Ven",
+    "age": 24,
+    "birth": {
+      "date": "2001-04-19",
+      "place": "Wormer",
+      "country": "Netherlands"
+    },
+    "nationality": "Netherlands",
+    "height": "193 cm",
+    "weight": "81 kg",
+    "injured": false,
+    "photo": "https://media.api-sports.io/football/players/152849.png"
+  },
+  "statistics": [
+    {
+      "team": {
+        "id": 47,
+        "name": "Tottenham",
+        "logo": "https://media.api-sports.io/football/teams/47.png"
+      },
+      "league": {
+        "id": 39,
+        "name": "Premier League",
+        "country": "England",
+        "logo": "https://media.api-sports.io/football/leagues/39.png",
+        "flag": "https://media.api-sports.io/flags/gb-eng.svg",
+        "season": 2023
+      },
+      "games": {
+        "appearences": 27,
+        "lineups": 27,
+        "minutes": 2343,
+        "number": null,
+        "position": "Defender",
+        "rating": "6.988888",
+        "captain": false
+      },
+      "substitutes": {
+        "in": 0,
+        "out": 4,
+        "bench": 1
+      },
+      "shots": {
+        "total": 7,
+        "on": 3
+      },
+      "goals": {
+        "total": 3,
+        "conceded": 0,
+        "assists": 0,
+        "saves": null
+      },
+      "passes": {
+        "total": 1782,
+        "key": 1,
+        "accuracy": 62
+      },
+      "tackles": {
+        "total": 49,
+        "blocks": 15,
+        "interceptions": 18
+      },
+      "duels": {
+        "total": 203,
+        "won": 119
+      },
+      "dribbles": {
+        "attempts": 24,
+        "success": 15,
+        "past": null
+      },
+      "fouls": {
+        "drawn": 17,
+        "committed": 13
+      },
+      "cards": {
+        "yellow": 5,
+        "yellowred": 0,
+        "red": 0
+      },
+      "penalty": {
+        "won": null,
+        "commited": null,
+        "scored": 0,
+        "missed": 0,
+        "saved": null
+      }
+    }
+  ]
+}

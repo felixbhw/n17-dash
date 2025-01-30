@@ -1,0 +1,95 @@
+{
+  "player": {
+    "id": 18932,
+    "name": "F. Forster",
+    "firstname": "Fraser Gerard",
+    "lastname": "Forster",
+    "age": 37,
+    "birth": {
+      "date": "1988-03-17",
+      "place": "Hexham",
+      "country": "England"
+    },
+    "nationality": "England",
+    "height": "201 cm",
+    "weight": "93 kg",
+    "injured": false,
+    "photo": "https://media.api-sports.io/football/players/18932.png"
+  },
+  "statistics": [
+    {
+      "team": {
+        "id": 47,
+        "name": "Tottenham",
+        "logo": "https://media.api-sports.io/football/teams/47.png"
+      },
+      "league": {
+        "id": 39,
+        "name": "Premier League",
+        "country": "England",
+        "logo": "https://media.api-sports.io/football/leagues/39.png",
+        "flag": "https://media.api-sports.io/flags/gb-eng.svg",
+        "season": 2023
+      },
+      "games": {
+        "appearences": 0,
+        "lineups": 0,
+        "minutes": 0,
+        "number": null,
+        "position": "Goalkeeper",
+        "rating": null,
+        "captain": false
+      },
+      "substitutes": {
+        "in": 0,
+        "out": 0,
+        "bench": 23
+      },
+      "shots": {
+        "total": null,
+        "on": null
+      },
+      "goals": {
+        "total": 0,
+        "conceded": 0,
+        "assists": null,
+        "saves": null
+      },
+      "passes": {
+        "total": null,
+        "key": null,
+        "accuracy": null
+      },
+      "tackles": {
+        "total": null,
+        "blocks": null,
+        "interceptions": null
+      },
+      "duels": {
+        "total": null,
+        "won": null
+      },
+      "dribbles": {
+        "attempts": null,
+        "success": null,
+        "past": null
+      },
+      "fouls": {
+        "drawn": null,
+        "committed": null
+      },
+      "cards": {
+        "yellow": 0,
+        "yellowred": 0,
+        "red": 0
+      },
+      "penalty": {
+        "won": null,
+        "commited": null,
+        "scored": 0,
+        "missed": 0,
+        "saved": 0
+      }
+    }
+  ]
+}
