@@ -3,6 +3,22 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 import os
 from pathlib import Path
+import uvicorn
+from dotenv import load_dotenv
+import logging
+from .background import background_tasks
+
+# Configure logging
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.StreamHandler()
+    ]
+)
+
+# Create logger for this module
+logger = logging.getLogger(__name__)
 
 from .routers import api, pages
 
@@ -25,3 +41,19 @@ app.include_router(pages.router)
 frontend_path = Path(__file__).parent.parent.parent / "frontend"
 app.mount("/static", StaticFiles(directory=str(frontend_path / "src")), name="static")
 app.mount("/", StaticFiles(directory=str(frontend_path / "templates"), html=True), name="templates")
+
+# Load environment variables
+load_dotenv()
+
+@app.on_event("startup")
+async def startup_event():
+    """Start background tasks when app starts"""
+    background_tasks.start()
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    """Stop background tasks when app shuts down"""
+    background_tasks.stop()
+
+if __name__ == "__main__":
+    uvicorn.run("app.main:app", host="0.0.0.0", port=8000, reload=True)

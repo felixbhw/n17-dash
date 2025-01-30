@@ -1,0 +1,70 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+        "player_id": {
+            "type": "integer",
+            "description": "ID of the player this link file is about"
+        },
+        "status": {
+            "type": "string",
+            "enum": ["rumor", "developing", "herewego", "official", "dead"],
+            "description": "Current status of the transfer/loan situation"
+        },
+        "direction": {
+            "type": "string",
+            "enum": ["incoming", "outgoing"],
+            "description": "Whether player is potentially joining or leaving Spurs"
+        },
+        "type": {
+            "type": "string",
+            "enum": ["transfer", "loan", "loan_with_option", "loan_with_obligation", "unclear"],
+            "description": "Type of the potential move"
+        },
+        "current_club": {
+            "type": "object",
+            "properties": {
+                "id": { "type": "integer" },
+                "name": { "type": "string" }
+            },
+            "description": "Current club of player (for incoming transfers)"
+        },
+        "interested_clubs": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "id": { "type": "integer" },
+                    "name": { "type": "string" }
+                }
+            },
+            "description": "List of clubs interested (for outgoing transfers)"
+        },
+        "rumored_price": {
+            "type": "object",
+            "properties": {
+                "amount": { "type": "number" },
+                "currency": { "type": "string" },
+                "add_ons": { "type": "number" }
+            },
+            "description": "Rumored transfer fee details"
+        },
+        "related_news": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "List of related news event IDs"
+        },
+        "last_updated": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp of last update to this file"
+        },
+        "confidence": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100,
+            "description": "AI-generated confidence score of transfer happening"
+        }
+    },
+    "required": ["player_id", "status", "direction", "type", "last_updated"]
+} 

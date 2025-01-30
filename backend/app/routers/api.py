@@ -3,6 +3,8 @@ import json
 from pathlib import Path
 import os
 import logging
+from ..background import background_tasks
+from typing import Dict
 
 router = APIRouter()
 
@@ -114,3 +116,18 @@ async def get_player_stats(player_id: str):
     except Exception as e:
         logger.error(f"Error loading stats for player {player_id}: {str(e)}")
         raise HTTPException(status_code=404, detail=f"Stats not found: {str(e)}")
+
+@router.post("/reddit/fetch-historical")
+async def fetch_historical_posts(days: int = 7) -> Dict[str, int]:
+    """Fetch historical transfer posts from r/coys
+    
+    Args:
+        days: Number of days to look back (default: 7)
+    
+    Returns:
+        Stats about processed posts
+    """
+    if days < 1 or days > 30:
+        raise HTTPException(status_code=400, detail="Days must be between 1 and 30")
+    
+    return await background_tasks.reddit_service.fetch_historical(days)

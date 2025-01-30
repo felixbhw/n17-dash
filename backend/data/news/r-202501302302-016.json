@@ -1,0 +1,23 @@
+{
+  "id": "r-202501302302-016",
+  "reddit_id": "1icv3la",
+  "source": "r",
+  "timestamp": "2025-01-29T14:33:40",
+  "tier": 3,
+  "url": "https://reddit.com/r/coys/comments/1icv3la/paul_o_keefe_tel_wants_to_join_united/",
+  "title": "[Paul O Keefe] Tel wants to join United",
+  "content": "",
+  "related_players": [],
+  "related_clubs": [
+    {
+      "id": 47,
+      "name": "Tottenham"
+    }
+  ],
+  "related_links": [],
+  "sentiment": {
+    "score": 0,
+    "confidence": 0
+  },
+  "keywords": []
+}

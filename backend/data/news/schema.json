@@ -1,0 +1,89 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+        "id": {
+            "type": "string",
+            "pattern": "^[a-z]-\\d{12}-\\d{3}$",
+            "description": "Unique ID in format source-YYYYMMDDHHmm-sequence"
+        },
+        "source": {
+            "type": "string",
+            "enum": ["r", "t", "o"],
+            "description": "Source type (r=reddit, t=twitter, o=official)"
+        },
+        "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the news was published/posted"
+        },
+        "tier": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 5,
+            "description": "Reliability tier (0=official, 1=most reliable, 5=least reliable)"
+        },
+        "url": {
+            "type": "string",
+            "format": "uri",
+            "description": "Link to the original source"
+        },
+        "title": {
+            "type": "string",
+            "description": "Title or headline of the news"
+        },
+        "content": {
+            "type": "string",
+            "description": "Full content or description of the news"
+        },
+        "related_players": {
+            "type": "array",
+            "items": {
+                "type": "integer"
+            },
+            "description": "List of player IDs mentioned in the news"
+        },
+        "related_clubs": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "id": { "type": "integer" },
+                    "name": { "type": "string" }
+                }
+            },
+            "description": "List of clubs mentioned in the news"
+        },
+        "related_links": {
+            "type": "array",
+            "items": {
+                "type": "integer"
+            },
+            "description": "List of player_ids whose link files are related to this news"
+        },
+        "sentiment": {
+            "type": "object",
+            "properties": {
+                "score": {
+                    "type": "number",
+                    "minimum": -1,
+                    "maximum": 1
+                },
+                "confidence": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                }
+            },
+            "description": "AI-generated sentiment analysis"
+        },
+        "keywords": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "description": "Extracted keywords from the content"
+        }
+    },
+    "required": ["id", "source", "timestamp", "tier", "url", "title", "content"]
+} 
