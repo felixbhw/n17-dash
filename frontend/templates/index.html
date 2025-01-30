@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>N17 Dashboard - Tottenham Squad</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body class="bg-gray-100">
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between h-16">
+                <div class="flex">
+                    <div class="flex-shrink-0 flex items-center">
+                        <h1 class="text-2xl font-bold text-blue-900">N17 Dashboard</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <div class="px-4 py-6 sm:px-0">
+            <h2 class="text-3xl font-bold text-gray-900 mb-6">Squad Overview</h2>
+            <div id="squad-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <!-- Squad cards will be dynamically inserted here -->
+            </div>
+        </div>
+    </main>
+
+    <template id="player-card-template">
+        <div class="bg-white overflow-hidden shadow rounded-lg hover:shadow-xl transition-shadow duration-300">
+            <div class="player-photo w-full h-48 bg-gray-200 bg-center bg-cover"></div>
+            <div class="px-4 py-4">
+                <h3 class="player-name text-lg font-semibold text-gray-900"></h3>
+                <div class="mt-2 grid grid-cols-2 gap-2 text-sm text-gray-600">
+                    <div>
+                        <span class="font-medium">Number:</span>
+                        <span class="player-number"></span>
+                    </div>
+                    <div>
+                        <span class="font-medium">Position:</span>
+                        <span class="player-position"></span>
+                    </div>
+                    <div>
+                        <span class="font-medium">Age:</span>
+                        <span class="player-age"></span>
+                    </div>
+                </div>
+                <a href="#" class="player-link mt-4 inline-block text-blue-600 hover:text-blue-800">View Details →</a>
+            </div>
+        </div>
+    </template>
+
+    <script src="/static/js/squad.js"></script>
+</body>
+</html>

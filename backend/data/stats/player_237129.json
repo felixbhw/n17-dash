@@ -1,0 +1,95 @@
+{
+  "player": {
+    "id": 237129,
+    "name": "P. Sarr",
+    "firstname": "Pape Matar",
+    "lastname": "Sarr",
+    "age": 23,
+    "birth": {
+      "date": "2002-09-14",
+      "place": "Thiaroye",
+      "country": "Senegal"
+    },
+    "nationality": "Senegal",
+    "height": "185 cm",
+    "weight": "70 kg",
+    "injured": false,
+    "photo": "https://media.api-sports.io/football/players/237129.png"
+  },
+  "statistics": [
+    {
+      "team": {
+        "id": 47,
+        "name": "Tottenham",
+        "logo": "https://media.api-sports.io/football/teams/47.png"
+      },
+      "league": {
+        "id": 39,
+        "name": "Premier League",
+        "country": "England",
+        "logo": "https://media.api-sports.io/football/leagues/39.png",
+        "flag": "https://media.api-sports.io/flags/gb-eng.svg",
+        "season": 2023
+      },
+      "games": {
+        "appearences": 34,
+        "lineups": 27,
+        "minutes": 2085,
+        "number": null,
+        "position": "Midfielder",
+        "rating": "7.002941",
+        "captain": false
+      },
+      "substitutes": {
+        "in": 7,
+        "out": 23,
+        "bench": 7
+      },
+      "shots": {
+        "total": 25,
+        "on": 14
+      },
+      "goals": {
+        "total": 3,
+        "conceded": 0,
+        "assists": 3,
+        "saves": null
+      },
+      "passes": {
+        "total": 1311,
+        "key": 20,
+        "accuracy": null
+      },
+      "tackles": {
+        "total": 34,
+        "blocks": 5,
+        "interceptions": 31
+      },
+      "duels": {
+        "total": 205,
+        "won": 94
+      },
+      "dribbles": {
+        "attempts": 36,
+        "success": 19,
+        "past": null
+      },
+      "fouls": {
+        "drawn": 17,
+        "committed": 32
+      },
+      "cards": {
+        "yellow": 9,
+        "yellowred": 0,
+        "red": 0
+      },
+      "penalty": {
+        "won": null,
+        "commited": null,
+        "scored": 0,
+        "missed": 0,
+        "saved": null
+      }
+    }
+  ]
+}

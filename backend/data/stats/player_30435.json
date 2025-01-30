@@ -1,0 +1,95 @@
+{
+  "player": {
+    "id": 30435,
+    "name": "D. Kulusevski",
+    "firstname": "Dejan",
+    "lastname": "Kulusevski",
+    "age": 25,
+    "birth": {
+      "date": "2000-04-25",
+      "place": "Stockholm",
+      "country": "Sweden"
+    },
+    "nationality": "Sweden",
+    "height": "186 cm",
+    "weight": "80 kg",
+    "injured": false,
+    "photo": "https://media.api-sports.io/football/players/30435.png"
+  },
+  "statistics": [
+    {
+      "team": {
+        "id": 47,
+        "name": "Tottenham",
+        "logo": "https://media.api-sports.io/football/teams/47.png"
+      },
+      "league": {
+        "id": 39,
+        "name": "Premier League",
+        "country": "England",
+        "logo": "https://media.api-sports.io/football/leagues/39.png",
+        "flag": "https://media.api-sports.io/flags/gb-eng.svg",
+        "season": 2023
+      },
+      "games": {
+        "appearences": 36,
+        "lineups": 31,
+        "minutes": 2767,
+        "number": null,
+        "position": "Midfielder",
+        "rating": "7.083333",
+        "captain": false
+      },
+      "substitutes": {
+        "in": 5,
+        "out": 10,
+        "bench": 5
+      },
+      "shots": {
+        "total": 31,
+        "on": 24
+      },
+      "goals": {
+        "total": 8,
+        "conceded": 0,
+        "assists": 3,
+        "saves": null
+      },
+      "passes": {
+        "total": 1132,
+        "key": 66,
+        "accuracy": null
+      },
+      "tackles": {
+        "total": 62,
+        "blocks": 1,
+        "interceptions": 18
+      },
+      "duels": {
+        "total": 392,
+        "won": 152
+      },
+      "dribbles": {
+        "attempts": 120,
+        "success": 54,
+        "past": null
+      },
+      "fouls": {
+        "drawn": 29,
+        "committed": 54
+      },
+      "cards": {
+        "yellow": 7,
+        "yellowred": 0,
+        "red": 0
+      },
+      "penalty": {
+        "won": null,
+        "commited": null,
+        "scored": 0,
+        "missed": 0,
+        "saved": null
+      }
+    }
+  ]
+}

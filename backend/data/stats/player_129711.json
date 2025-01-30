@@ -1,0 +1,169 @@
+{
+  "player": {
+    "id": 129711,
+    "name": "B. Johnson",
+    "firstname": "Brennan Price",
+    "lastname": "Johnson",
+    "age": 24,
+    "birth": {
+      "date": "2001-05-23",
+      "place": "Nottingham",
+      "country": "England"
+    },
+    "nationality": "Wales",
+    "height": "186 cm",
+    "weight": "73 kg",
+    "injured": false,
+    "photo": "https://media.api-sports.io/football/players/129711.png"
+  },
+  "statistics": [
+    {
+      "team": {
+        "id": 47,
+        "name": "Tottenham",
+        "logo": "https://media.api-sports.io/football/teams/47.png"
+      },
+      "league": {
+        "id": 39,
+        "name": "Premier League",
+        "country": "England",
+        "logo": "https://media.api-sports.io/football/leagues/39.png",
+        "flag": "https://media.api-sports.io/flags/gb-eng.svg",
+        "season": 2023
+      },
+      "games": {
+        "appearences": 32,
+        "lineups": 23,
+        "minutes": 2091,
+        "number": null,
+        "position": "Attacker",
+        "rating": "6.700000",
+        "captain": false
+      },
+      "substitutes": {
+        "in": 9,
+        "out": 15,
+        "bench": 9
+      },
+      "shots": {
+        "total": 1,
+        "on": null
+      },
+      "goals": {
+        "total": 5,
+        "conceded": 0,
+        "assists": null,
+        "saves": null
+      },
+      "passes": {
+        "total": 58,
+        "key": 1,
+        "accuracy": null
+      },
+      "tackles": {
+        "total": 4,
+        "blocks": 1,
+        "interceptions": null
+      },
+      "duels": {
+        "total": 24,
+        "won": 14
+      },
+      "dribbles": {
+        "attempts": 5,
+        "success": 2,
+        "past": null
+      },
+      "fouls": {
+        "drawn": 7,
+        "committed": 1
+      },
+      "cards": {
+        "yellow": 3,
+        "yellowred": 0,
+        "red": 0
+      },
+      "penalty": {
+        "won": null,
+        "commited": null,
+        "scored": 0,
+        "missed": 0,
+        "saved": null
+      }
+    },
+    {
+      "team": {
+        "id": 65,
+        "name": "Nottingham Forest",
+        "logo": "https://media.api-sports.io/football/teams/65.png"
+      },
+      "league": {
+        "id": 39,
+        "name": "Premier League",
+        "country": "England",
+        "logo": "https://media.api-sports.io/football/leagues/39.png",
+        "flag": "https://media.api-sports.io/flags/gb-eng.svg",
+        "season": 2023
+      },
+      "games": {
+        "appearences": 3,
+        "lineups": 3,
+        "minutes": 240,
+        "number": null,
+        "position": "Attacker",
+        "rating": "6.700000",
+        "captain": false
+      },
+      "substitutes": {
+        "in": 0,
+        "out": 3,
+        "bench": 0
+      },
+      "shots": {
+        "total": 1,
+        "on": null
+      },
+      "goals": {
+        "total": 0,
+        "conceded": 0,
+        "assists": null,
+        "saves": null
+      },
+      "passes": {
+        "total": 58,
+        "key": 1,
+        "accuracy": null
+      },
+      "tackles": {
+        "total": 4,
+        "blocks": 1,
+        "interceptions": null
+      },
+      "duels": {
+        "total": 24,
+        "won": 14
+      },
+      "dribbles": {
+        "attempts": 5,
+        "success": 2,
+        "past": null
+      },
+      "fouls": {
+        "drawn": 7,
+        "committed": 1
+      },
+      "cards": {
+        "yellow": 0,
+        "yellowred": 0,
+        "red": 0
+      },
+      "penalty": {
+        "won": null,
+        "commited": null,
+        "scored": 0,
+        "missed": 0,
+        "saved": null
+      }
+    }
+  ]
+}

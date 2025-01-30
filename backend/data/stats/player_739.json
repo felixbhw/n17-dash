@@ -1,0 +1,243 @@
+{
+  "player": {
+    "id": 739,
+    "name": "Reguilón",
+    "firstname": "Sergio",
+    "lastname": "Reguilón Rodríguez",
+    "age": 29,
+    "birth": {
+      "date": "1996-12-16",
+      "place": "Madrid",
+      "country": "Spain"
+    },
+    "nationality": "Spain",
+    "height": "178 cm",
+    "weight": "68 kg",
+    "injured": false,
+    "photo": "https://media.api-sports.io/football/players/739.png"
+  },
+  "statistics": [
+    {
+      "team": {
+        "id": 55,
+        "name": "Brentford",
+        "logo": "https://media.api-sports.io/football/teams/55.png"
+      },
+      "league": {
+        "id": 39,
+        "name": "Premier League",
+        "country": "England",
+        "logo": "https://media.api-sports.io/football/leagues/39.png",
+        "flag": "https://media.api-sports.io/flags/gb-eng.svg",
+        "season": 2023
+      },
+      "games": {
+        "appearences": 16,
+        "lineups": 14,
+        "minutes": 1122,
+        "number": null,
+        "position": "Defender",
+        "rating": "6.956250",
+        "captain": false
+      },
+      "substitutes": {
+        "in": 2,
+        "out": 7,
+        "bench": 2
+      },
+      "shots": {
+        "total": 10,
+        "on": 2
+      },
+      "goals": {
+        "total": 0,
+        "conceded": 0,
+        "assists": 4,
+        "saves": null
+      },
+      "passes": {
+        "total": 412,
+        "key": 20,
+        "accuracy": null
+      },
+      "tackles": {
+        "total": 45,
+        "blocks": 6,
+        "interceptions": 16
+      },
+      "duels": {
+        "total": 148,
+        "won": 87
+      },
+      "dribbles": {
+        "attempts": 24,
+        "success": 13,
+        "past": null
+      },
+      "fouls": {
+        "drawn": 15,
+        "committed": 10
+      },
+      "cards": {
+        "yellow": 4,
+        "yellowred": 0,
+        "red": 1
+      },
+      "penalty": {
+        "won": null,
+        "commited": null,
+        "scored": 0,
+        "missed": 0,
+        "saved": null
+      }
+    },
+    {
+      "team": {
+        "id": 33,
+        "name": "Manchester United",
+        "logo": "https://media.api-sports.io/football/teams/33.png"
+      },
+      "league": {
+        "id": 39,
+        "name": "Premier League",
+        "country": "England",
+        "logo": "https://media.api-sports.io/football/leagues/39.png",
+        "flag": "https://media.api-sports.io/flags/gb-eng.svg",
+        "season": 2023
+      },
+      "games": {
+        "appearences": 9,
+        "lineups": 4,
+        "minutes": 410,
+        "number": null,
+        "position": "Defender",
+        "rating": "6.956250",
+        "captain": false
+      },
+      "substitutes": {
+        "in": 5,
+        "out": 3,
+        "bench": 10
+      },
+      "shots": {
+        "total": 10,
+        "on": 2
+      },
+      "goals": {
+        "total": 0,
+        "conceded": 0,
+        "assists": 4,
+        "saves": null
+      },
+      "passes": {
+        "total": 412,
+        "key": 20,
+        "accuracy": null
+      },
+      "tackles": {
+        "total": 45,
+        "blocks": 6,
+        "interceptions": 16
+      },
+      "duels": {
+        "total": 148,
+        "won": 87
+      },
+      "dribbles": {
+        "attempts": 24,
+        "success": 13,
+        "past": null
+      },
+      "fouls": {
+        "drawn": 15,
+        "committed": 10
+      },
+      "cards": {
+        "yellow": 3,
+        "yellowred": 0,
+        "red": 0
+      },
+      "penalty": {
+        "won": null,
+        "commited": null,
+        "scored": 0,
+        "missed": 0,
+        "saved": null
+      }
+    },
+    {
+      "team": {
+        "id": 47,
+        "name": "Tottenham",
+        "logo": "https://media.api-sports.io/football/teams/47.png"
+      },
+      "league": {
+        "id": 39,
+        "name": "Premier League",
+        "country": "England",
+        "logo": "https://media.api-sports.io/football/leagues/39.png",
+        "flag": "https://media.api-sports.io/flags/gb-eng.svg",
+        "season": 2023
+      },
+      "games": {
+        "appearences": 0,
+        "lineups": 0,
+        "minutes": 0,
+        "number": null,
+        "position": "Defender",
+        "rating": "6.956250",
+        "captain": false
+      },
+      "substitutes": {
+        "in": 0,
+        "out": 0,
+        "bench": 0
+      },
+      "shots": {
+        "total": 10,
+        "on": 2
+      },
+      "goals": {
+        "total": 0,
+        "conceded": 0,
+        "assists": 4,
+        "saves": null
+      },
+      "passes": {
+        "total": 412,
+        "key": 20,
+        "accuracy": null
+      },
+      "tackles": {
+        "total": 45,
+        "blocks": 6,
+        "interceptions": 16
+      },
+      "duels": {
+        "total": 148,
+        "won": 87
+      },
+      "dribbles": {
+        "attempts": 24,
+        "success": 13,
+        "past": null
+      },
+      "fouls": {
+        "drawn": 15,
+        "committed": 10
+      },
+      "cards": {
+        "yellow": 0,
+        "yellowred": 0,
+        "red": 0
+      },
+      "penalty": {
+        "won": null,
+        "commited": null,
+        "scored": 0,
+        "missed": 0,
+        "saved": null
+      }
+    }
+  ]
+}

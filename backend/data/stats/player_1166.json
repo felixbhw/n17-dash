@@ -1,0 +1,95 @@
+{
+  "player": {
+    "id": 1166,
+    "name": "T. Werner",
+    "firstname": "Timo",
+    "lastname": "Werner",
+    "age": 29,
+    "birth": {
+      "date": "1996-03-06",
+      "place": "Stuttgart",
+      "country": "Germany"
+    },
+    "nationality": "Germany",
+    "height": "180 cm",
+    "weight": "75 kg",
+    "injured": false,
+    "photo": "https://media.api-sports.io/football/players/1166.png"
+  },
+  "statistics": [
+    {
+      "team": {
+        "id": 47,
+        "name": "Tottenham",
+        "logo": "https://media.api-sports.io/football/teams/47.png"
+      },
+      "league": {
+        "id": 39,
+        "name": "Premier League",
+        "country": "England",
+        "logo": "https://media.api-sports.io/football/leagues/39.png",
+        "flag": "https://media.api-sports.io/flags/gb-eng.svg",
+        "season": 2023
+      },
+      "games": {
+        "appearences": 13,
+        "lineups": 10,
+        "minutes": 815,
+        "number": null,
+        "position": "Attacker",
+        "rating": "7.023076",
+        "captain": false
+      },
+      "substitutes": {
+        "in": 3,
+        "out": 8,
+        "bench": 3
+      },
+      "shots": {
+        "total": 18,
+        "on": 7
+      },
+      "goals": {
+        "total": 2,
+        "conceded": 0,
+        "assists": 3,
+        "saves": null
+      },
+      "passes": {
+        "total": 323,
+        "key": 15,
+        "accuracy": null
+      },
+      "tackles": {
+        "total": 7,
+        "blocks": null,
+        "interceptions": 3
+      },
+      "duels": {
+        "total": 60,
+        "won": 25
+      },
+      "dribbles": {
+        "attempts": 24,
+        "success": 12,
+        "past": null
+      },
+      "fouls": {
+        "drawn": 5,
+        "committed": 3
+      },
+      "cards": {
+        "yellow": 1,
+        "yellowred": 0,
+        "red": 0
+      },
+      "penalty": {
+        "won": null,
+        "commited": null,
+        "scored": 0,
+        "missed": 0,
+        "saved": null
+      }
+    }
+  ]
+}

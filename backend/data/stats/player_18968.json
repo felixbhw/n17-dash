@@ -1,0 +1,95 @@
+{
+  "player": {
+    "id": 18968,
+    "name": "Y. Bissouma",
+    "firstname": "Yves",
+    "lastname": "Bissouma",
+    "age": 29,
+    "birth": {
+      "date": "1996-08-30",
+      "place": "Issia",
+      "country": "Côte d'Ivoire"
+    },
+    "nationality": "Mali",
+    "height": "182 cm",
+    "weight": "80 kg",
+    "injured": false,
+    "photo": "https://media.api-sports.io/football/players/18968.png"
+  },
+  "statistics": [
+    {
+      "team": {
+        "id": 47,
+        "name": "Tottenham",
+        "logo": "https://media.api-sports.io/football/teams/47.png"
+      },
+      "league": {
+        "id": 39,
+        "name": "Premier League",
+        "country": "England",
+        "logo": "https://media.api-sports.io/football/leagues/39.png",
+        "flag": "https://media.api-sports.io/flags/gb-eng.svg",
+        "season": 2023
+      },
+      "games": {
+        "appearences": 28,
+        "lineups": 26,
+        "minutes": 2083,
+        "number": null,
+        "position": "Midfielder",
+        "rating": "7.067857",
+        "captain": false
+      },
+      "substitutes": {
+        "in": 2,
+        "out": 16,
+        "bench": 2
+      },
+      "shots": {
+        "total": 18,
+        "on": 5
+      },
+      "goals": {
+        "total": 0,
+        "conceded": 0,
+        "assists": null,
+        "saves": null
+      },
+      "passes": {
+        "total": 1834,
+        "key": 11,
+        "accuracy": 60
+      },
+      "tackles": {
+        "total": 78,
+        "blocks": 5,
+        "interceptions": 37
+      },
+      "duels": {
+        "total": 262,
+        "won": 150
+      },
+      "dribbles": {
+        "attempts": 39,
+        "success": 27,
+        "past": null
+      },
+      "fouls": {
+        "drawn": 31,
+        "committed": 35
+      },
+      "cards": {
+        "yellow": 10,
+        "yellowred": 1,
+        "red": 1
+      },
+      "penalty": {
+        "won": null,
+        "commited": null,
+        "scored": 0,
+        "missed": 0,
+        "saved": null
+      }
+    }
+  ]
+}

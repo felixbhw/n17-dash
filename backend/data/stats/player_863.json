@@ -1,0 +1,95 @@
+{
+  "player": {
+    "id": 863,
+    "name": "R. Bentancur",
+    "firstname": "Rodrigo",
+    "lastname": "Bentancur Colmán",
+    "age": 28,
+    "birth": {
+      "date": "1997-06-25",
+      "place": "Nueva Helvecia",
+      "country": "Uruguay"
+    },
+    "nationality": "Uruguay",
+    "height": "187 cm",
+    "weight": "72 kg",
+    "injured": false,
+    "photo": "https://media.api-sports.io/football/players/863.png"
+  },
+  "statistics": [
+    {
+      "team": {
+        "id": 47,
+        "name": "Tottenham",
+        "logo": "https://media.api-sports.io/football/teams/47.png"
+      },
+      "league": {
+        "id": 39,
+        "name": "Premier League",
+        "country": "England",
+        "logo": "https://media.api-sports.io/football/leagues/39.png",
+        "flag": "https://media.api-sports.io/flags/gb-eng.svg",
+        "season": 2023
+      },
+      "games": {
+        "appearences": 23,
+        "lineups": 13,
+        "minutes": 1007,
+        "number": null,
+        "position": "Midfielder",
+        "rating": "6.804347",
+        "captain": false
+      },
+      "substitutes": {
+        "in": 10,
+        "out": 12,
+        "bench": 10
+      },
+      "shots": {
+        "total": 13,
+        "on": 5
+      },
+      "goals": {
+        "total": 1,
+        "conceded": 0,
+        "assists": 1,
+        "saves": null
+      },
+      "passes": {
+        "total": 787,
+        "key": 8,
+        "accuracy": null
+      },
+      "tackles": {
+        "total": 23,
+        "blocks": 4,
+        "interceptions": 17
+      },
+      "duels": {
+        "total": 148,
+        "won": 65
+      },
+      "dribbles": {
+        "attempts": 19,
+        "success": 11,
+        "past": null
+      },
+      "fouls": {
+        "drawn": 17,
+        "committed": 20
+      },
+      "cards": {
+        "yellow": 7,
+        "yellowred": 0,
+        "red": 0
+      },
+      "penalty": {
+        "won": null,
+        "commited": null,
+        "scored": 0,
+        "missed": 0,
+        "saved": null
+      }
+    }
+  ]
+}

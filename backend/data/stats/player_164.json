@@ -1,0 +1,95 @@
+{
+  "player": {
+    "id": 164,
+    "name": "B. Davies",
+    "firstname": "Benjamin Thomas",
+    "lastname": "Davies",
+    "age": 32,
+    "birth": {
+      "date": "1993-04-24",
+      "place": "Neath",
+      "country": "Wales"
+    },
+    "nationality": "Wales",
+    "height": "181 cm",
+    "weight": "77 kg",
+    "injured": false,
+    "photo": "https://media.api-sports.io/football/players/164.png"
+  },
+  "statistics": [
+    {
+      "team": {
+        "id": 47,
+        "name": "Tottenham",
+        "logo": "https://media.api-sports.io/football/teams/47.png"
+      },
+      "league": {
+        "id": 39,
+        "name": "Premier League",
+        "country": "England",
+        "logo": "https://media.api-sports.io/football/leagues/39.png",
+        "flag": "https://media.api-sports.io/flags/gb-eng.svg",
+        "season": 2023
+      },
+      "games": {
+        "appearences": 17,
+        "lineups": 12,
+        "minutes": 1086,
+        "number": null,
+        "position": "Defender",
+        "rating": "7.017647",
+        "captain": false
+      },
+      "substitutes": {
+        "in": 5,
+        "out": 2,
+        "bench": 18
+      },
+      "shots": {
+        "total": 11,
+        "on": 2
+      },
+      "goals": {
+        "total": 1,
+        "conceded": 0,
+        "assists": null,
+        "saves": null
+      },
+      "passes": {
+        "total": 812,
+        "key": 4,
+        "accuracy": 43
+      },
+      "tackles": {
+        "total": 24,
+        "blocks": 15,
+        "interceptions": 10
+      },
+      "duels": {
+        "total": 119,
+        "won": 76
+      },
+      "dribbles": {
+        "attempts": 10,
+        "success": 4,
+        "past": null
+      },
+      "fouls": {
+        "drawn": 19,
+        "committed": 8
+      },
+      "cards": {
+        "yellow": 2,
+        "yellowred": 0,
+        "red": 0
+      },
+      "penalty": {
+        "won": null,
+        "commited": null,
+        "scored": 0,
+        "missed": 0,
+        "saved": null
+      }
+    }
+  ]
+}

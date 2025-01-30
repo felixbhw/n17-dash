@@ -1,0 +1,95 @@
+{
+  "player": {
+    "id": 336564,
+    "name": "W. Odobert",
+    "firstname": "Wilson Serge Eric",
+    "lastname": "Odobert",
+    "age": 21,
+    "birth": {
+      "date": "2004-11-28",
+      "place": "Meaux",
+      "country": "France"
+    },
+    "nationality": "France",
+    "height": "182 cm",
+    "weight": "76 kg",
+    "injured": false,
+    "photo": "https://media.api-sports.io/football/players/336564.png"
+  },
+  "statistics": [
+    {
+      "team": {
+        "id": 44,
+        "name": "Burnley",
+        "logo": "https://media.api-sports.io/football/teams/44.png"
+      },
+      "league": {
+        "id": 39,
+        "name": "Premier League",
+        "country": "England",
+        "logo": "https://media.api-sports.io/football/leagues/39.png",
+        "flag": "https://media.api-sports.io/flags/gb-eng.svg",
+        "season": 2023
+      },
+      "games": {
+        "appearences": 29,
+        "lineups": 25,
+        "minutes": 2108,
+        "number": null,
+        "position": "Attacker",
+        "rating": "6.914285",
+        "captain": false
+      },
+      "substitutes": {
+        "in": 4,
+        "out": 14,
+        "bench": 8
+      },
+      "shots": {
+        "total": 33,
+        "on": 14
+      },
+      "goals": {
+        "total": 3,
+        "conceded": 0,
+        "assists": 2,
+        "saves": null
+      },
+      "passes": {
+        "total": 545,
+        "key": 31,
+        "accuracy": null
+      },
+      "tackles": {
+        "total": 17,
+        "blocks": 2,
+        "interceptions": 6
+      },
+      "duels": {
+        "total": 216,
+        "won": 97
+      },
+      "dribbles": {
+        "attempts": 102,
+        "success": 53,
+        "past": null
+      },
+      "fouls": {
+        "drawn": 19,
+        "committed": 9
+      },
+      "cards": {
+        "yellow": 3,
+        "yellowred": 0,
+        "red": 0
+      },
+      "penalty": {
+        "won": null,
+        "commited": null,
+        "scored": 0,
+        "missed": 0,
+        "saved": null
+      }
+    }
+  ]
+}

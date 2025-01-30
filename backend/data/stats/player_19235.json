@@ -1,0 +1,95 @@
+{
+  "player": {
+    "id": 19235,
+    "name": "D. Spence",
+    "firstname": "Diop Tehuti",
+    "lastname": "Djed-Hotep Spence",
+    "age": 25,
+    "birth": {
+      "date": "2000-08-09",
+      "place": "London",
+      "country": "England"
+    },
+    "nationality": "England",
+    "height": "185 cm",
+    "weight": "71 kg",
+    "injured": false,
+    "photo": "https://media.api-sports.io/football/players/19235.png"
+  },
+  "statistics": [
+    {
+      "team": {
+        "id": 47,
+        "name": "Tottenham",
+        "logo": "https://media.api-sports.io/football/teams/47.png"
+      },
+      "league": {
+        "id": 39,
+        "name": "Premier League",
+        "country": "England",
+        "logo": "https://media.api-sports.io/football/leagues/39.png",
+        "flag": "https://media.api-sports.io/flags/gb-eng.svg",
+        "season": 2023
+      },
+      "games": {
+        "appearences": 0,
+        "lineups": 0,
+        "minutes": 0,
+        "number": null,
+        "position": "Defender",
+        "rating": null,
+        "captain": false
+      },
+      "substitutes": {
+        "in": 0,
+        "out": 0,
+        "bench": 0
+      },
+      "shots": {
+        "total": null,
+        "on": null
+      },
+      "goals": {
+        "total": 0,
+        "conceded": null,
+        "assists": null,
+        "saves": null
+      },
+      "passes": {
+        "total": null,
+        "key": null,
+        "accuracy": null
+      },
+      "tackles": {
+        "total": null,
+        "blocks": null,
+        "interceptions": null
+      },
+      "duels": {
+        "total": null,
+        "won": null
+      },
+      "dribbles": {
+        "attempts": null,
+        "success": null,
+        "past": null
+      },
+      "fouls": {
+        "drawn": null,
+        "committed": null
+      },
+      "cards": {
+        "yellow": 0,
+        "yellowred": 0,
+        "red": 0
+      },
+      "penalty": {
+        "won": null,
+        "commited": null,
+        "scored": null,
+        "missed": null,
+        "saved": null
+      }
+    }
+  ]
+}

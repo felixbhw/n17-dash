@@ -1,0 +1,95 @@
+{
+  "player": {
+    "id": 18883,
+    "name": "D. Solanke",
+    "firstname": "Dominic Ayodele",
+    "lastname": "Solanke-Mitchell",
+    "age": 28,
+    "birth": {
+      "date": "1997-09-14",
+      "place": "Reading",
+      "country": "England"
+    },
+    "nationality": "England",
+    "height": "187 cm",
+    "weight": "80 kg",
+    "injured": false,
+    "photo": "https://media.api-sports.io/football/players/18883.png"
+  },
+  "statistics": [
+    {
+      "team": {
+        "id": 35,
+        "name": "Bournemouth",
+        "logo": "https://media.api-sports.io/football/teams/35.png"
+      },
+      "league": {
+        "id": 39,
+        "name": "Premier League",
+        "country": "England",
+        "logo": "https://media.api-sports.io/football/leagues/39.png",
+        "flag": "https://media.api-sports.io/flags/gb-eng.svg",
+        "season": 2023
+      },
+      "games": {
+        "appearences": 38,
+        "lineups": 37,
+        "minutes": 3332,
+        "number": null,
+        "position": "Attacker",
+        "rating": "7.021052",
+        "captain": false
+      },
+      "substitutes": {
+        "in": 1,
+        "out": 9,
+        "bench": 1
+      },
+      "shots": {
+        "total": 78,
+        "on": 38
+      },
+      "goals": {
+        "total": 19,
+        "conceded": 0,
+        "assists": 3,
+        "saves": null
+      },
+      "passes": {
+        "total": 533,
+        "key": 39,
+        "accuracy": null
+      },
+      "tackles": {
+        "total": 23,
+        "blocks": 5,
+        "interceptions": 7
+      },
+      "duels": {
+        "total": 537,
+        "won": 204
+      },
+      "dribbles": {
+        "attempts": 99,
+        "success": 39,
+        "past": null
+      },
+      "fouls": {
+        "drawn": 45,
+        "committed": 42
+      },
+      "cards": {
+        "yellow": 3,
+        "yellowred": 0,
+        "red": 0
+      },
+      "penalty": {
+        "won": null,
+        "commited": null,
+        "scored": 2,
+        "missed": 1,
+        "saved": null
+      }
+    }
+  ]
+}

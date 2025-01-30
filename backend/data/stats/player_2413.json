@@ -1,0 +1,95 @@
+{
+  "player": {
+    "id": 2413,
+    "name": "Richarlison",
+    "firstname": "Richarlison",
+    "lastname": "de Andrade",
+    "age": 28,
+    "birth": {
+      "date": "1997-05-10",
+      "place": "Nova Venécia",
+      "country": "Brazil"
+    },
+    "nationality": "Brazil",
+    "height": "184 cm",
+    "weight": "83 kg",
+    "injured": false,
+    "photo": "https://media.api-sports.io/football/players/2413.png"
+  },
+  "statistics": [
+    {
+      "team": {
+        "id": 47,
+        "name": "Tottenham",
+        "logo": "https://media.api-sports.io/football/teams/47.png"
+      },
+      "league": {
+        "id": 39,
+        "name": "Premier League",
+        "country": "England",
+        "logo": "https://media.api-sports.io/football/leagues/39.png",
+        "flag": "https://media.api-sports.io/flags/gb-eng.svg",
+        "season": 2023
+      },
+      "games": {
+        "appearences": 28,
+        "lineups": 18,
+        "minutes": 1493,
+        "number": null,
+        "position": "Attacker",
+        "rating": "7.060714",
+        "captain": false
+      },
+      "substitutes": {
+        "in": 10,
+        "out": 12,
+        "bench": 11
+      },
+      "shots": {
+        "total": 47,
+        "on": 25
+      },
+      "goals": {
+        "total": 11,
+        "conceded": 0,
+        "assists": 4,
+        "saves": null
+      },
+      "passes": {
+        "total": 373,
+        "key": 16,
+        "accuracy": null
+      },
+      "tackles": {
+        "total": 16,
+        "blocks": 6,
+        "interceptions": 8
+      },
+      "duels": {
+        "total": 229,
+        "won": 81
+      },
+      "dribbles": {
+        "attempts": 33,
+        "success": 10,
+        "past": null
+      },
+      "fouls": {
+        "drawn": 30,
+        "committed": 20
+      },
+      "cards": {
+        "yellow": 3,
+        "yellowred": 0,
+        "red": 0
+      },
+      "penalty": {
+        "won": null,
+        "commited": null,
+        "scored": 0,
+        "missed": 0,
+        "saved": null
+      }
+    }
+  ]
+}
