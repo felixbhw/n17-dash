@@ -10,6 +10,14 @@ import aiohttp
 import asyncio
 from datetime import datetime
 
+from ...utils.validation import (
+    validate_api_response,
+    validate_player_data,
+    validate_injury_data,
+    validate_match_data,
+    validate_transfer_data
+)
+
 class APIFootballClient:
     """Main client class for interacting with API-Football."""
     
@@ -177,16 +185,16 @@ class DataTransformer:
             return None
     
     @staticmethod
-    def transform_player(api_data: Dict) -> Dict:
+    def transform_player(api_data: Dict) -> Optional[Dict]:
         """Transform player data into database model format."""
-        if not api_data.get('response'):
+        if not validate_api_response(api_data):
             return None
             
         player_data = api_data['response'][0]
         player = player_data.get('player', {})
         statistics = player_data.get('statistics', [{}])[0]
         
-        return {
+        transformed_data = {
             'player_id': player.get('id'),
             'name': player.get('name'),
             'date_of_birth': DataTransformer._parse_date(player.get('birth', {}).get('date')),
@@ -194,11 +202,13 @@ class DataTransformer:
             'position': statistics.get('games', {}).get('position') or player.get('position'),
             'team_id': statistics.get('team', {}).get('id')
         }
-
+        
+        return validate_player_data(transformed_data)
+    
     @staticmethod
-    def transform_team(api_data: Dict) -> Dict:
+    def transform_team(api_data: Dict) -> Optional[Dict]:
         """Transform team data into database model format."""
-        if not api_data.get('response'):
+        if not validate_api_response(api_data):
             return None
             
         team_data = api_data['response'][0]
@@ -208,15 +218,17 @@ class DataTransformer:
         return {
             'team_id': team.get('id'),
             'name': team.get('name'),
+            'code': team.get('code'),  # E.g., "TOT"
             'stadium': venue.get('name'),
-            'manager': None,  # Not provided in the API response
+            'stadium_capacity': venue.get('capacity'),
+            'founded': team.get('founded'),
             'league': team.get('country')  # Using country as a fallback
         }
 
     @staticmethod
     def transform_match(api_data: Dict) -> List[Dict]:
         """Transform match data into database model format."""
-        if not api_data.get('response'):
+        if not validate_api_response(api_data):
             return []
             
         matches = []
@@ -230,20 +242,25 @@ class DataTransformer:
             if not fixture.get('id') or not teams.get('home', {}).get('id') or not teams.get('away', {}).get('id'):
                 continue
                 
-            matches.append({
+            transformed_data = {
                 'match_id': fixture.get('id'),
                 'home_team_id': teams.get('home', {}).get('id'),
                 'away_team_id': teams.get('away', {}).get('id'),
                 'match_date': DataTransformer._parse_date(fixture.get('date')),
                 'scoreline': f"{goals.get('home', 0)}-{goals.get('away', 0)}",
                 'competition': league.get('name')
-            })
+            }
+            
+            validated = validate_match_data(transformed_data)
+            if validated:
+                matches.append(validated)
+                
         return matches
 
     @staticmethod
     def transform_transfer(api_data: Dict) -> List[Dict]:
         """Transform transfer data into database model format."""
-        if not api_data.get('response'):
+        if not validate_api_response(api_data):
             return []
             
         transfers = []
@@ -254,19 +271,24 @@ class DataTransformer:
             if not transfer.get('player', {}).get('id'):
                 continue
                 
-            transfers.append({
+            transformed_data = {
                 'player_id': transfer.get('player', {}).get('id'),
-                'status': 'Completed',  # API only returns completed transfers
+                'status': transfer_info.get('type', 'Completed'),  # API only returns completed transfers
                 'last_update': DataTransformer._parse_date(transfer_info.get('date')),
                 'destination_club': transfer_info.get('teams', {}).get('out', {}).get('name'),
                 'transfer_fee': transfer_info.get('fee')
-            })
+            }
+            
+            validated = validate_transfer_data(transformed_data)
+            if validated:
+                transfers.append(validated)
+                
         return transfers
 
     @staticmethod
     def transform_injury(api_data: Dict) -> List[Dict]:
         """Transform injury data into database model format."""
-        if not api_data.get('response'):
+        if not validate_api_response(api_data):
             return []
             
         injuries = []
@@ -275,13 +297,18 @@ class DataTransformer:
             if not injury.get('player', {}).get('id'):
                 continue
                 
-            injuries.append({
+            transformed_data = {
                 'player_id': injury.get('player', {}).get('id'),
                 'description': injury.get('type') or injury.get('reason'),
                 'injury_date': DataTransformer._parse_date(injury.get('fixture', {}).get('date')),
                 'recovery_estimated': None,  # Not provided in API
-                'severity': None  # Not provided in API
-            })
+                'severity': injury.get('type')  # Will be mapped in validation
+            }
+            
+            validated = validate_injury_data(transformed_data)
+            if validated:
+                injuries.append(validated)
+                
         return injuries
 
     @staticmethod

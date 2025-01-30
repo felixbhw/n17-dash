@@ -20,6 +20,18 @@ A comprehensive dashboard system for tracking Tottenham Hotspur squad, transfers
      - Extract entities (players, clubs, dates)
    - Maintain update history with confidence scores
 
+### Data Pipeline Updates (v0.2)
+
+4. **Enhanced API-Football Integration**
+   - Implemented `APIFootballClient` with 15+ endpoints covering:
+     - Team/player statistics
+     - Match fixtures/results
+     - Injury reports
+     - Transfer history
+   - Added `DataTransformer` class for API-to-DB model conversion
+   - Custom error handling (RateLimitError, AuthenticationError)
+   - Async requests with aiohttp for better performance
+
 ## Core System Components
 
 ### Database Schema
@@ -240,3 +252,15 @@ n17-dash/
 - **Frontend**: HTMX + React
 - **AI**: LangChain + OpenRouter APIs
 - **Infrastructure**: Docker + Redis (for Celery) + Apache
+
+## Next Development Priorities
+
+The core API infrastructure is now operational. Immediate next steps:
+
+1. **Implement news collectors** for Reddit (r/coys) and club RSS feeds
+2. **Build AI classification pipeline** to process raw news text into structured updates
+3. **Create Celery tasks** for daily API syncs and hourly news checks
+4. **Develop FastAPI endpoints** to expose processed data to frontend
+5. **Implement automated testing** for data transformation logic
+
+Current progress focuses on the data pipeline - next phase connects AI processing with frontend display.

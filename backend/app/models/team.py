@@ -11,9 +11,11 @@ class Team(Base):
 
     team_id = Column(Integer, primary_key=True)
     name = Column(String(100), nullable=False)
+    code = Column(String(3))  # E.g., "TOT" for Tottenham
     stadium = Column(String(100))
     manager = Column(String(100))
     league = Column(String(50))
+    founded = Column(Integer)  # Founded year
 
     # Relationships
     players = relationship("Player", back_populates="team")
@@ -25,4 +27,4 @@ class Team(Base):
                               back_populates="away_team")
 
     def __repr__(self):
-        return f"<Team(name='{self.name}', league='{self.league}')>"
+        return f"<Team(name='{self.name}', code='{self.code}', league='{self.league}')>"
