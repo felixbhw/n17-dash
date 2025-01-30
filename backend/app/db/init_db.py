@@ -2,14 +2,19 @@
 Database initialization script for N17 Dashboard.
 """
 
+import os
 import asyncio
 import logging
+from dotenv import load_dotenv
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from .session import engine
 from ..models import Base, Team
 from ..pipeline.api_clients.football_api import APIFootballClient
 from ..pipeline.data_ingestion import DataIngestionService
+
+# Load environment variables from .env file
+load_dotenv()
 
 logger = logging.getLogger(__name__)
 
@@ -32,7 +37,7 @@ async def init_db() -> None:
             ingestion_service = DataIngestionService(api_client, session)
             
             # Perform initial sync for Tottenham (ID: 47)
-            results = await ingestion_service.perform_initial_sync()
+            results = await ingestion_service.perform_initial_sync(team_id=47)
             
             if results['team']:
                 logger.info(

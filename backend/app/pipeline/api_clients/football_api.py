@@ -9,6 +9,7 @@ from typing import Dict, List, Optional, Union
 import aiohttp
 import asyncio
 from datetime import datetime
+import logging
 
 from ...utils.validation import (
     validate_api_response,
@@ -17,6 +18,8 @@ from ...utils.validation import (
     validate_match_data,
     validate_transfer_data
 )
+
+logger = logging.getLogger(__name__)
 
 class APIFootballClient:
     """Main client class for interacting with API-Football."""
@@ -28,37 +31,52 @@ class APIFootballClient:
             raise ValueError("API key not found. Please set API_FOOTBALL_KEY environment variable.")
         self.base_url = "https://v3.football.api-sports.io"
         self.headers = {
-            "x-apisports-key": self.api_key
+            "x-rapidapi-key": self.api_key,
+            "x-rapidapi-host": "v3.football.api-sports.io"
         }
         self.current_season = datetime.now().year
         
-    async def _make_request(self, endpoint: str, params: Dict = None) -> Dict:
-        """Make authenticated request to API-Football."""
-        url = f"{self.base_url}/{endpoint}"
-        
+    async def _get(self, endpoint: str, params: dict = None) -> dict:
+        """Make API request with proper headers and validation"""
         try:
             async with aiohttp.ClientSession() as session:
-                async with session.get(url, headers=self.headers, params=params) as response:
-                    if response.status == 429:
-                        raise RateLimitError("API rate limit exceeded")
-                    elif response.status == 401:
-                        raise AuthenticationError("Invalid API key")
-                    elif response.status != 200:
-                        error_text = await response.text()
-                        raise EndpointError(f"API request failed with status {response.status}: {error_text}")
-                    
-                    return await response.json()
-        except aiohttp.ClientError as e:
-            raise APIFootballError(f"Request failed: {str(e)}")
+                for attempt in range(3):
+                    async with session.get(
+                        f"{self.base_url}/{endpoint}",
+                        headers=self.headers,
+                        params=params
+                    ) as response:
+                        if response.status == 429:
+                            retry_after = int(response.headers.get('Retry-After', 30))
+                            logger.warning(f"Rate limited. Retrying in {retry_after}s")
+                            await asyncio.sleep(retry_after)
+                            continue
+                        
+                        response.raise_for_status()
+                        data = await response.json()
+                        
+                        # Use updated validation
+                        validated = validate_api_response(data)
+                        if not validated:
+                            logger.error(f"Empty response from {endpoint}")
+                            return {}
+                            
+                        return validated
+        except Exception as e:
+            logger.error(f"Request failed: {str(e)}")
+            return {}
 
     # Team-related methods
     async def get_team_info(self, team_id: int) -> Dict:
         """Get detailed information about a specific team."""
-        return await self._make_request("teams", {"id": team_id})
+        return await self._get("teams", {"id": team_id})
 
     async def get_team_squad(self, team_id: int) -> List[Dict]:
         """Get current squad list for a team."""
-        return await self._make_request("players/squads", {"team": team_id})
+        return await self._get("players", {
+            "team": team_id,
+            "season": self.current_season
+        })
 
     async def get_team_statistics(self, team_id: int, league_id: int, season: Optional[int] = None) -> Dict:
         """Get team statistics for a specific season/league."""
@@ -67,7 +85,7 @@ class APIFootballClient:
             "league": league_id,
             "season": season or self.current_season
         }
-        return await self._make_request("teams/statistics", params)
+        return await self._get("teams/statistics", params)
 
     # Player-related methods
     async def get_player_info(self, player_id: int, season: Optional[int] = None) -> Dict:
@@ -76,7 +94,7 @@ class APIFootballClient:
             "id": player_id,
             "season": season or self.current_season
         }
-        return await self._make_request("players", params)
+        return await self._get("players", params)
 
     async def get_player_statistics(self, player_id: int, season: Optional[int] = None) -> Dict:
         """Get player statistics for a specific season."""
@@ -84,25 +102,25 @@ class APIFootballClient:
             "id": player_id,
             "season": season or self.current_season
         }
-        return await self._make_request("players", params)
+        return await self._get("players", params)
 
     async def get_player_transfers(self, player_id: int) -> List[Dict]:
         """Get transfer history for a player."""
-        return await self._make_request("transfers", {"player": player_id})
+        return await self._get("transfers", {"player": player_id})
 
     # Match-related methods
     async def get_matches(self, team_id: int, status: str = "SCHEDULED", season: Optional[int] = None) -> List[Dict]:
-        """Get matches for a team (scheduled, live, or finished)."""
+        """Get matches for a team with required season parameter."""
         params = {
             "team": team_id,
             "status": status,
-            "season": season or self.current_season
+            "season": season or self.current_season  # Ensure season is always included
         }
-        return await self._make_request("fixtures", params)
+        return await self._get("fixtures", params)
 
     async def get_match_statistics(self, match_id: int) -> Dict:
         """Get detailed statistics for a specific match."""
-        return await self._make_request("fixtures/statistics", {"fixture": match_id})
+        return await self._get("fixtures/statistics", {"fixture": match_id})
 
     async def get_head_to_head(self, team1_id: int, team2_id: int, season: Optional[int] = None) -> List[Dict]:
         """Get head-to-head record between two teams."""
@@ -110,7 +128,7 @@ class APIFootballClient:
             "h2h": f"{team1_id}-{team2_id}",
             "season": season or self.current_season
         }
-        return await self._make_request("fixtures/headtohead", params)
+        return await self._get("fixtures/headtohead", params)
 
     # League/Competition methods
     async def get_league_standings(self, league_id: int, season: Optional[int] = None) -> List[Dict]:
@@ -119,7 +137,7 @@ class APIFootballClient:
             "league": league_id,
             "season": season or self.current_season
         }
-        return await self._make_request("standings", params)
+        return await self._get("standings", params)
 
     async def get_league_topscorers(self, league_id: int, season: Optional[int] = None) -> List[Dict]:
         """Get top scorers for a league/season."""
@@ -127,16 +145,16 @@ class APIFootballClient:
             "league": league_id,
             "season": season or self.current_season
         }
-        return await self._make_request("players/topscorers", params)
+        return await self._get("players/topscorers", params)
 
     # Injury-related methods
-    async def get_injuries(self, team_id: int, season: Optional[int] = None) -> List[Dict]:
-        """Get current injuries for a team."""
+    async def get_injuries(self, team_id: int, season: Optional[int] = None) -> Dict:
+        """Get team injuries with season parameter."""
         params = {
             "team": team_id,
-            "season": season or self.current_season
+            "season": season or self.current_season  # Add required season
         }
-        return await self._make_request("injuries", params)
+        return await self._get("injuries", params)
 
     # Transfer-related methods
     async def get_transfer_rumors(self, team_id: Optional[int] = None, player_id: Optional[int] = None) -> List[Dict]:
@@ -146,23 +164,23 @@ class APIFootballClient:
             params["team"] = team_id
         if player_id:
             params["player"] = player_id
-        return await self._make_request("transfers", params)
+        return await self._get("transfers", params)
 
     async def get_transfer_history(self, team_id: int, season: Optional[int] = None) -> List[Dict]:
         """Get transfer history for a team."""
         params = {"team": team_id}
         if season:
             params["season"] = season
-        return await self._make_request("transfers", params)
+        return await self._get("transfers", params)
 
     # Utility methods
     async def search_players(self, query: str) -> List[Dict]:
         """Search for players by name."""
-        return await self._make_request("players/search", {"search": query})
+        return await self._get("players/search", {"search": query})
 
     async def get_seasons(self, league_id: int) -> List[int]:
         """Get available seasons for a league."""
-        return await self._make_request("leagues/seasons", {"league": league_id})
+        return await self._get("leagues/seasons", {"league": league_id})
 
 class DataTransformer:
     """
@@ -185,22 +203,22 @@ class DataTransformer:
             return None
     
     @staticmethod
-    def transform_player(api_data: Dict) -> Optional[Dict]:
-        """Transform player data into database model format."""
+    def transform_player(api_data: Dict, team_id: int = None) -> Optional[Dict]:
+        """Handle squad response format with direct team context."""
         if not validate_api_response(api_data):
             return None
             
-        player_data = api_data['response'][0]
-        player = player_data.get('player', {})
-        statistics = player_data.get('statistics', [{}])[0]
+        # Handle both player detail and squad list responses
+        player = api_data.get('player', api_data)  # Account for different response structures
+        statistics = api_data.get('statistics', [{}])[-1]
         
         transformed_data = {
             'player_id': player.get('id'),
             'name': player.get('name'),
             'date_of_birth': DataTransformer._parse_date(player.get('birth', {}).get('date')),
             'nationality': player.get('nationality'),
-            'position': statistics.get('games', {}).get('position') or player.get('position'),
-            'team_id': statistics.get('team', {}).get('id')
+            'position': player.get('position', 'Unknown'),  # Use direct position from squad response
+            'team_id': team_id  # Use context team_id from squad sync
         }
         
         return validate_player_data(transformed_data)
@@ -220,7 +238,6 @@ class DataTransformer:
             'name': team.get('name'),
             'code': team.get('code'),  # E.g., "TOT"
             'stadium': venue.get('name'),
-            'stadium_capacity': venue.get('capacity'),
             'founded': team.get('founded'),
             'league': team.get('country')  # Using country as a fallback
         }

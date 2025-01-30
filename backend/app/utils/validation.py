@@ -2,7 +2,7 @@
 Validation utilities for N17 Dashboard.
 """
 
-from typing import Dict, List, Optional, Any
+from typing import Dict, List, Optional, Any, Union
 from datetime import datetime
 import logging
 from pydantic import BaseModel, Field, validator
@@ -11,16 +11,16 @@ logger = logging.getLogger(__name__)
 
 class APIResponse(BaseModel):
     """Base model for API-Football responses."""
-    get: str
-    parameters: Dict[str, Any]
-    errors: List[str] = []
-    results: int
-    response: List[Dict[str, Any]]
+    get: Optional[str]
+    parameters: Optional[Dict[str, Any]]
+    errors: Union[List[str], Dict[str, str], Dict[str, Any]] = []
+    results: Optional[int]
+    response: Union[List[Dict[str, Any]], Dict[str, Any]]
 
     @validator('response')
     def validate_response_not_empty(cls, v):
-        """Ensure response list is not empty."""
-        if not v:
+        """Ensure response is not empty."""
+        if isinstance(v, list) and not v:
             raise ValueError("API response is empty")
         return v
 
@@ -57,7 +57,7 @@ class InjuryValidation(BaseModel):
     player_id: int
     description: Optional[str]
     injury_date: datetime
-    recovery_estimated: Optional[datetime]
+    recovery_estimated: Optional[datetime] = Field(alias='expected_return')
     severity: Optional[str]
 
     @validator('severity')
@@ -125,14 +125,20 @@ class TransferValidation(BaseModel):
         # Assume fee is in euros, convert to millions
         return round(float(v) / 1_000_000, 2)
 
-def validate_api_response(response_data: Dict) -> bool:
-    """Validate raw API response structure."""
-    try:
-        APIResponse(**response_data)
-        return True
-    except Exception as e:
-        logger.error(f"API response validation failed: {str(e)}")
-        return False
+def validate_api_response(response: dict) -> dict:
+    """Validate the structure of API-Football responses."""
+    if not isinstance(response, dict):
+        raise ValueError("API response must be a dictionary")
+    
+    if response.get("errors"):
+        logger.error(f"API errors: {response['errors']}")
+        return {}
+        
+    if "response" not in response:
+        logger.error("Invalid API response structure")
+        return {}
+    
+    return response["response"]  # Return the actual data payload
 
 def validate_player_data(player_data: Dict) -> Optional[Dict]:
     """Validate and normalize player data."""

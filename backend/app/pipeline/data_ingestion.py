@@ -10,7 +10,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy import update
 
-from ..models import Player, Team, Match
+from ..models import Player, Team, Match, Injury
 from .api_clients.football_api import APIFootballClient, DataTransformer
 from ..db.session import get_db
 
@@ -103,10 +103,10 @@ class DataIngestionService:
             await self.session.rollback()
             return []
             
-    async def ingest_matches(self, team_id: int, status: str = "SCHEDULED") -> List[Match]:
+    async def ingest_matches(self, team_id: int, status: str = "SCHEDULED", season: Optional[int] = None) -> List[Match]:
         """Fetch and store match data."""
         try:
-            match_data = await self.api_client.get_matches(team_id, status)
+            match_data = await self.api_client.get_matches(team_id, status, season)
             if not match_data:
                 logger.error(f"No match data found for team ID {team_id}")
                 return []
@@ -141,29 +141,70 @@ class DataIngestionService:
             logger.error(f"Error ingesting match data: {str(e)}")
             await self.session.rollback()
             return []
+            
+
+    async def ingest_injuries(self, team_id: int, season: int) -> List[Injury]:
+        """Fetch and store injury data."""
+        try:
+            raw_data = await self.api_client.get_injuries(team_id, season)
+            if not raw_data:
+                logger.warning(f"No injury data returned for team {team_id}")
+                return []
+
+            transformed = self.transformer.transform_injury(raw_data)
+            
+            injuries = []
+            for injury_info in transformed:
+                # Check if injury exists
+                stmt = select(Injury).where(
+                    (Injury.player_id == injury_info['player_id']) &
+                    (Injury.injury_date == injury_info['injury_date'])
+                )
+                result = await self.session.execute(stmt)
+                injury = result.scalar_one_or_none()
+                
+                if injury:
+                    # Update existing injury
+                    await self.session.execute(
+                        update(Injury)
+                        .where(Injury.injury_id == injury.injury_id)
+                        .values(**injury_info)
+                    )
+                    injuries.append(injury)
+                else:
+                    # Create new injury
+                    injury = Injury(**injury_info)
+                    self.session.add(injury)
+                    injuries.append(injury)
+            
+            await self.session.commit()
+            return injuries
+            
+        except Exception as e:
+            logger.error(f"Error ingesting injury data: {str(e)}")
+            await self.session.rollback()
+            return []
 
     async def perform_initial_sync(self, team_id: int = 47) -> Dict:
-        """
-        Perform initial sync of all data for a team.
-        Default team_id 47 is Tottenham Hotspur.
-        """
-        results = {
-            'team': None,
-            'players': [],
-            'matches': []
-        }
+        """Include season parameter in all data requests"""
+        results = {'team': None, 'players': [], 'matches': [], 'injuries': [], 'transfers': []}
         
-        # Sync team data
-        team = await self.ingest_team(team_id)
-        if team:
+        if (team := await self.ingest_team(team_id)):
             results['team'] = team
-            
-            # Sync squad data
             results['players'] = await self.ingest_squad(team_id)
             
-            # Sync matches (both scheduled and finished)
-            scheduled_matches = await self.ingest_matches(team_id, "SCHEDULED")
-            finished_matches = await self.ingest_matches(team_id, "FINISHED")
-            results['matches'] = scheduled_matches + finished_matches
+            # Get current season for historical data
+            current_season = datetime.now().year
             
+            # Sync matches with explicit season
+            scheduled = await self.ingest_matches(team_id, "SCHEDULED", season=current_season)
+            finished = await self.ingest_matches(team_id, "FINISHED", season=current_season)
+            results['matches'] = scheduled + finished
+            
+            # Sync injuries with season
+            results['injuries'] = await self.ingest_injuries(team_id, season=current_season)
+            
+            # Transfer data
+            results['transfers'] = await self.ingest_transfers(team_id)
+        
         return results 

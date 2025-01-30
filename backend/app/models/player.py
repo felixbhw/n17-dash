@@ -13,8 +13,8 @@ class Player(Base):
     name = Column(String(100), nullable=False)
     date_of_birth = Column(Date)
     nationality = Column(String(50))
-    position = Column(String(20))
-    team_id = Column(Integer, ForeignKey('teams.team_id'))
+    position = Column(String(20), nullable=True)
+    team_id = Column(Integer, ForeignKey('teams.team_id'), nullable=True)
 
     # Relationships
     team = relationship("Team", back_populates="players")
