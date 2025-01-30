@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import os
 from pathlib import Path
 
-from .routers import api
+from .routers import api, pages
 
 app = FastAPI(title="N17 Dashboard API")
 
@@ -19,6 +19,7 @@ app.add_middleware(
 
 # Include API routes
 app.include_router(api.router, prefix="/api")
+app.include_router(pages.router)
 
 # Mount static files
 frontend_path = Path(__file__).parent.parent.parent / "frontend"
