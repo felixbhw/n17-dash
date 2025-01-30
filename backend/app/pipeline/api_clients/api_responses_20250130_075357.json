@@ -1,0 +1,82 @@
+{
+  "team": {
+    "get": "teams",
+    "parameters": {
+      "id": "47"
+    },
+    "errors": [],
+    "results": 1,
+    "paging": {
+      "current": 1,
+      "total": 1
+    },
+    "response": [
+      {
+        "team": {
+          "id": 47,
+          "name": "Tottenham",
+          "code": "TOT",
+          "country": "England",
+          "founded": 1882,
+          "national": false,
+          "logo": "https://media.api-sports.io/football/teams/47.png"
+        },
+        "venue": {
+          "id": 593,
+          "name": "Tottenham Hotspur Stadium",
+          "address": "Bill Nicholson Way, 748 High Road",
+          "city": "London",
+          "capacity": 62850,
+          "surface": "grass",
+          "image": "https://media.api-sports.io/football/venues/593.png"
+        }
+      }
+    ]
+  },
+  "matches": {
+    "get": "fixtures",
+    "parameters": {
+      "team": "47",
+      "status": "SCHEDULED"
+    },
+    "errors": {
+      "season": "The Season field is required."
+    },
+    "results": 0,
+    "paging": {
+      "current": 1,
+      "total": 1
+    },
+    "response": []
+  },
+  "injuries": {
+    "get": "injuries",
+    "parameters": {
+      "team": "47"
+    },
+    "errors": {
+      "season": "The Season field is required."
+    },
+    "results": 0,
+    "paging": {
+      "current": 1,
+      "total": 1
+    },
+    "response": []
+  },
+  "player": {
+    "get": "players",
+    "parameters": {
+      "id": "186"
+    },
+    "errors": {
+      "season": "The Season field is required."
+    },
+    "results": 0,
+    "paging": {
+      "current": 1,
+      "total": 1
+    },
+    "response": []
+  }
+}
