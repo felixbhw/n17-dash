@@ -98,3 +98,8 @@
 .stat-card:hover {
     transform: translateY(-2px);
 }
+
+/* Utility Classes */
+.hidden {
+    display: none !important;
+}
