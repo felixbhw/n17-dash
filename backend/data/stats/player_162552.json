@@ -1,0 +1,95 @@
+{
+  "player": {
+    "id": 162552,
+    "name": "D. Scarlett",
+    "firstname": "Dane Pharrell",
+    "lastname": "Scarlett",
+    "age": 21,
+    "birth": {
+      "date": "2004-03-24",
+      "place": null,
+      "country": "England"
+    },
+    "nationality": "England",
+    "height": "180 cm",
+    "weight": "76 kg",
+    "injured": false,
+    "photo": "https://media.api-sports.io/football/players/162552.png"
+  },
+  "statistics": [
+    {
+      "team": {
+        "id": 47,
+        "name": "Tottenham",
+        "logo": "https://media.api-sports.io/football/teams/47.png"
+      },
+      "league": {
+        "id": 39,
+        "name": "Premier League",
+        "country": "England",
+        "logo": "https://media.api-sports.io/football/leagues/39.png",
+        "flag": "https://media.api-sports.io/flags/gb-eng.svg",
+        "season": 2023
+      },
+      "games": {
+        "appearences": 4,
+        "lineups": 0,
+        "minutes": 18,
+        "number": null,
+        "position": "Attacker",
+        "rating": "6.375000",
+        "captain": false
+      },
+      "substitutes": {
+        "in": 4,
+        "out": 0,
+        "bench": 8
+      },
+      "shots": {
+        "total": null,
+        "on": null
+      },
+      "goals": {
+        "total": 0,
+        "conceded": 0,
+        "assists": 0,
+        "saves": null
+      },
+      "passes": {
+        "total": 3,
+        "key": null,
+        "accuracy": null
+      },
+      "tackles": {
+        "total": 1,
+        "blocks": null,
+        "interceptions": null
+      },
+      "duels": {
+        "total": 9,
+        "won": 3
+      },
+      "dribbles": {
+        "attempts": 2,
+        "success": null,
+        "past": null
+      },
+      "fouls": {
+        "drawn": 2,
+        "committed": 1
+      },
+      "cards": {
+        "yellow": 0,
+        "yellowred": 0,
+        "red": 0
+      },
+      "penalty": {
+        "won": null,
+        "commited": null,
+        "scored": 0,
+        "missed": 0,
+        "saved": null
+      }
+    }
+  ]
+}

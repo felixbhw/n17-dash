@@ -10,11 +10,15 @@ import aiohttp
 import asyncio
 from datetime import datetime
 from typing import Dict, List, Optional
+from dotenv import load_dotenv
+
+# Load environment variables from .env file in parent directory
+load_dotenv('../.env')
 
 # Constants for Tottenham and Premier League
 TOTTENHAM_TEAM_ID = 47
 PREMIER_LEAGUE_ID = 39
-CURRENT_SEASON = datetime.now().year
+CURRENT_SEASON = datetime.now().year  # Using current season since we have pro plan
 
 class SimpleFootballAPI:
     """
@@ -138,7 +142,10 @@ class SimpleFootballAPI:
         response = await self._make_request("players/squads", {"team": TOTTENHAM_TEAM_ID})
         
         if not response.get('response'):
-            raise Exception("Couldn't get squad data from API!")
+            if response.get('errors'):
+                error_msg = "; ".join(response['errors'].values())
+                raise Exception(f"API Error with squad: {error_msg}")
+            raise Exception("Couldn't get squad data from API - empty response")
         
         # Process each player
         squad_data = response['response'][0]
@@ -179,18 +186,25 @@ class SimpleFootballAPI:
         Get Tottenham's matches and save them.
         
         Args:
-            status: Match status ("all", "scheduled", "live", or "finished")
+            status: Match status ("all", "NS-scheduled", "LIVE", "FT-finished", etc.)
         """
         # Get matches from API
         params = {
             "team": TOTTENHAM_TEAM_ID,
-            "season": CURRENT_SEASON,
-            "status": status
+            "season": CURRENT_SEASON
         }
+        
+        # Only add status if not "all"
+        if status.lower() != "all":
+            params["status"] = status.upper()
+            
         response = await self._make_request("fixtures", params)
         
         if not response.get('response'):
-            raise Exception("Couldn't get match data from API!")
+            if response.get('errors'):
+                error_msg = "; ".join(response['errors'].values())
+                raise Exception(f"API Error with matches: {error_msg}")
+            raise Exception("Couldn't get match data from API - empty response")
         
         # Process each match
         for match in response['response']:
@@ -231,7 +245,7 @@ class SimpleFootballAPI:
             # Save to a JSON file named with the match ID
             self._save_json('matches', f"{match['fixture']['id']}.json", match_data)
             
-            # If match is finished, get and save statistics
+            # Get and save statistics for finished matches
             if match['fixture']['status']['short'] == 'FT':
                 await self._update_match_stats(match['fixture']['id'])
     
@@ -253,7 +267,10 @@ class SimpleFootballAPI:
         response = await self._make_request("injuries", params)
         
         if not response.get('response'):
-            raise Exception("Couldn't get injury data from API!")
+            if response.get('errors'):
+                error_msg = "; ".join(response['errors'].values())
+                raise Exception(f"API Error with injuries: {error_msg}")
+            raise Exception("Couldn't get injury data from API - empty response")
         
         # Save all injuries in one file since there usually aren't many
         injuries_data = {

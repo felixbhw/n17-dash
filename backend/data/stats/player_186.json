@@ -1,0 +1,95 @@
+{
+  "player": {
+    "id": 186,
+    "name": "Son Heung-Min",
+    "firstname": "Heung-Min",
+    "lastname": "Son",
+    "age": 33,
+    "birth": {
+      "date": "1992-07-08",
+      "place": "Chuncheon",
+      "country": "Korea Republic"
+    },
+    "nationality": "Korea Republic",
+    "height": "183 cm",
+    "weight": "78 kg",
+    "injured": false,
+    "photo": "https://media.api-sports.io/football/players/186.png"
+  },
+  "statistics": [
+    {
+      "team": {
+        "id": 47,
+        "name": "Tottenham",
+        "logo": "https://media.api-sports.io/football/teams/47.png"
+      },
+      "league": {
+        "id": 39,
+        "name": "Premier League",
+        "country": "England",
+        "logo": "https://media.api-sports.io/football/leagues/39.png",
+        "flag": "https://media.api-sports.io/flags/gb-eng.svg",
+        "season": 2023
+      },
+      "games": {
+        "appearences": 35,
+        "lineups": 34,
+        "minutes": 2948,
+        "number": null,
+        "position": "Attacker",
+        "rating": "7.568571",
+        "captain": false
+      },
+      "substitutes": {
+        "in": 1,
+        "out": 15,
+        "bench": 1
+      },
+      "shots": {
+        "total": 63,
+        "on": 40
+      },
+      "goals": {
+        "total": 17,
+        "conceded": 0,
+        "assists": 10,
+        "saves": null
+      },
+      "passes": {
+        "total": 1025,
+        "key": 69,
+        "accuracy": null
+      },
+      "tackles": {
+        "total": 21,
+        "blocks": 1,
+        "interceptions": 8
+      },
+      "duels": {
+        "total": 230,
+        "won": 104
+      },
+      "dribbles": {
+        "attempts": 86,
+        "success": 39,
+        "past": null
+      },
+      "fouls": {
+        "drawn": 39,
+        "committed": 12
+      },
+      "cards": {
+        "yellow": 1,
+        "yellowred": 0,
+        "red": 0
+      },
+      "penalty": {
+        "won": null,
+        "commited": null,
+        "scored": 2,
+        "missed": 0,
+        "saved": null
+      }
+    }
+  ]
+}

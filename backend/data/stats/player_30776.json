@@ -1,0 +1,95 @@
+{
+  "player": {
+    "id": 30776,
+    "name": "C. Romero",
+    "firstname": "Cristian Gabriel",
+    "lastname": "Romero",
+    "age": 27,
+    "birth": {
+      "date": "1998-04-27",
+      "place": "Córdoba",
+      "country": "Argentina"
+    },
+    "nationality": "Argentina",
+    "height": "185 cm",
+    "weight": "78 kg",
+    "injured": false,
+    "photo": "https://media.api-sports.io/football/players/30776.png"
+  },
+  "statistics": [
+    {
+      "team": {
+        "id": 47,
+        "name": "Tottenham",
+        "logo": "https://media.api-sports.io/football/teams/47.png"
+      },
+      "league": {
+        "id": 39,
+        "name": "Premier League",
+        "country": "England",
+        "logo": "https://media.api-sports.io/football/leagues/39.png",
+        "flag": "https://media.api-sports.io/flags/gb-eng.svg",
+        "season": 2023
+      },
+      "games": {
+        "appearences": 33,
+        "lineups": 33,
+        "minutes": 2793,
+        "number": null,
+        "position": "Defender",
+        "rating": "7.296969",
+        "captain": false
+      },
+      "substitutes": {
+        "in": 0,
+        "out": 2,
+        "bench": 0
+      },
+      "shots": {
+        "total": 20,
+        "on": 10
+      },
+      "goals": {
+        "total": 5,
+        "conceded": 0,
+        "assists": 0,
+        "saves": null
+      },
+      "passes": {
+        "total": 2586,
+        "key": 7,
+        "accuracy": 72
+      },
+      "tackles": {
+        "total": 66,
+        "blocks": 22,
+        "interceptions": 44
+      },
+      "duels": {
+        "total": 268,
+        "won": 182
+      },
+      "dribbles": {
+        "attempts": 6,
+        "success": 5,
+        "past": null
+      },
+      "fouls": {
+        "drawn": 24,
+        "committed": 31
+      },
+      "cards": {
+        "yellow": 7,
+        "yellowred": 0,
+        "red": 1
+      },
+      "penalty": {
+        "won": null,
+        "commited": null,
+        "scored": 0,
+        "missed": 0,
+        "saved": null
+      }
+    }
+  ]
+}
