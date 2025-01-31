@@ -6,7 +6,7 @@ from pathlib import Path
 import uvicorn
 from dotenv import load_dotenv
 import logging
-from .background import background_tasks
+from .background import get_background_tasks
 
 # Configure logging
 logging.basicConfig(
@@ -48,11 +48,13 @@ load_dotenv()
 @app.on_event("startup")
 async def startup_event():
     """Start background tasks when app starts"""
+    background_tasks = get_background_tasks()
     background_tasks.start()
 
 @app.on_event("shutdown")
 async def shutdown_event():
     """Stop background tasks when app shuts down"""
+    background_tasks = get_background_tasks()
     background_tasks.stop()
 
 if __name__ == "__main__":

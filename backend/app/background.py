@@ -3,12 +3,14 @@ from datetime import datetime
 import logging
 from typing import Optional
 from .services import RedditService
+from .services.llm_service import LLMService
 
 logger = logging.getLogger(__name__)
 
 class BackgroundTasks:
     def __init__(self):
         self.reddit_service = RedditService()
+        self.llm_service = LLMService()
         self.reddit_task: Optional[asyncio.Task] = None
         self.is_running = False
     
@@ -17,6 +19,8 @@ class BackgroundTasks:
         while self.is_running:
             try:
                 await self.reddit_service.check_new_posts()
+                # Process any new news files
+                await self.llm_service.process_pending_news()
                 # Wait 2 minutes before checking again
                 await asyncio.sleep(120)
             except Exception as e:
@@ -40,4 +44,10 @@ class BackgroundTasks:
             logger.info("Stopped Reddit monitoring task")
 
 # Global instance
-background_tasks = BackgroundTasks() 
+_background_tasks = None
+
+def get_background_tasks():
+    global _background_tasks
+    if _background_tasks is None:
+        _background_tasks = BackgroundTasks()
+    return _background_tasks 

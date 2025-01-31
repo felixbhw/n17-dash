@@ -1,0 +1,19 @@
+{
+  "players": [
+    {
+      "name": "Brian Brobbey",
+      "current_club": null,
+      "is_squad_player": false
+    }
+  ],
+  "clubs": [],
+  "transfer_type": "unclear",
+  "direction": "unclear",
+  "price": {
+    "amount": null,
+    "currency": null
+  },
+  "confidence": 0,
+  "news_file": "r-202501310052-016",
+  "last_updated": "2025-01-30T19:53:40.319256"
+}

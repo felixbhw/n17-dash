@@ -11,9 +11,17 @@ import asyncio
 from datetime import datetime
 from typing import Dict, List, Optional
 from dotenv import load_dotenv
+from pathlib import Path
+import logging
 
-# Load environment variables from .env file in parent directory
-load_dotenv('../.env')
+# Set up logging
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+
+# Load environment variables from project root .env file
+PROJECT_ROOT = Path(__file__).parent.parent
+ENV_PATH = PROJECT_ROOT / '.env'
+load_dotenv(ENV_PATH)
 
 # Constants for Tottenham and Premier League
 TOTTENHAM_TEAM_ID = 47
@@ -60,13 +68,28 @@ class SimpleFootballAPI:
         Returns:
             Dict with the API response
         """
-        url = f"{self.base_url}/{endpoint}"
+        # Handle v2 endpoints differently
+        if endpoint.startswith('v2/'):
+            endpoint = endpoint[3:]  # Remove 'v2/' prefix
+            url = f"https://v2.api-football.com/{endpoint}"
+            headers = {
+                "x-apisports-key": self.api_key
+            }
+        else:
+            url = f"{self.base_url}/{endpoint}"
+            headers = self.headers
         
         try:
             # Make the API request
             async with aiohttp.ClientSession() as session:
-                async with session.get(url, headers=self.headers, params=params) as response:
+                async with session.get(url, headers=headers, params=params) as response:
                     response_data = await response.json()
+                    
+                    # Handle v2 API response format
+                    if endpoint.startswith('players/search/'):
+                        if response_data.get('api', {}).get('results') == 0:
+                            return {'response': []}
+                        return {'response': response_data.get('api', {}).get('players', [])}
                     
                     # API-Football specific error handling
                     if not response_data.get('response') and response_data.get('errors'):
@@ -111,21 +134,11 @@ class SimpleFootballAPI:
         except Exception as e:
             raise Exception(f"Couldn't save to {filepath}: {str(e)}")
     
-    def _load_json(self, folder: str, filename: str) -> Optional[Dict]:
-        """
-        Load data from a JSON file.
-        
-        Args:
-            folder: Folder name (e.g. "players")
-            filename: File name (e.g. "123.json")
-            
-        Returns:
-            Dict with the data, or None if file doesn't exist
-        """
-        filepath = os.path.join('data', folder, filename)
-        
+    def _load_json(self, subdir: str, filename: str) -> Optional[Dict]:
+        """Load JSON data from a file."""
         try:
-            if os.path.exists(filepath):
+            filepath = PROJECT_ROOT / 'backend' / 'data' / subdir / filename
+            if filepath.exists():
                 with open(filepath, encoding='utf-8') as f:
                     return json.load(f)
             return None
@@ -180,6 +193,249 @@ class SimpleFootballAPI:
         if response.get('response'):
             stats_data = response['response'][0]
             self._save_json('stats', f"player_{player_id}.json", stats_data)
+    
+    def _score_player_match(self, search_name: str, api_player: Dict) -> float:
+        """
+        Score how well an API player result matches our search target.
+        Returns a score between 0-1, where 1 is a perfect match.
+        """
+        search_parts = search_name.lower().split()
+        if len(search_parts) < 2:
+            return 0
+            
+        search_first, search_last = search_parts[0], search_parts[-1]
+        
+        # Get API player names, safely handling None values
+        api_first = (api_player.get('firstname') or '').lower()
+        api_last = (api_player.get('lastname') or '').lower()
+        
+        score = 0.0
+        
+        # Exact last name match is most important
+        if search_last == api_last:
+            score += 0.6
+        elif search_last in api_last or api_last in search_last:
+            score += 0.3
+            
+        # First name match adds points
+        if search_first == api_first:
+            score += 0.4
+        elif search_first and api_first and search_first[0] == api_first[0]:  # Initial matches
+            score += 0.2
+        elif search_first in api_first or api_first in search_first:
+            score += 0.1
+            
+        return min(1.0, score)  # Cap at 1.0
+
+    async def search_player(self, name: str, team_id: int = None) -> List[Dict]:
+        """
+        Search for a player by name using an improved search strategy:
+        1. If team_id provided, check that team's current squad first
+        2. Try v2 search with various name combinations that meet 4-char minimum
+        3. Use smarter name matching that handles abbreviated names (e.g. "M. Tel")
+        
+        Args:
+            name: Player name to search for
+            team_id: Optional team ID to check squad first
+            
+        Returns:
+            List containing matches, best matches first
+        """
+        results = []
+        name = name.strip()
+        
+        # If team_id provided, check that team's squad first
+        if team_id:
+            logger.debug(f"Checking squad for team {team_id}")
+            squad_response = await self._make_request("players/squads", {"team": team_id})
+            
+            if squad_response.get('response'):
+                for player in squad_response['response'][0]['players']:
+                    score = self._score_player_match_v2(name, {
+                        'player_name': player['name'],
+                        'firstname': player.get('firstname'),
+                        'lastname': player.get('lastname')
+                    })
+                    if score > 0.5:  # Higher threshold for squad matches
+                        logger.info(f"Found player in team squad: {player['name']} (score: {score:.2f})")
+                        return [{
+                            'id': player['id'],
+                            'name': player['name'],
+                            'firstname': player.get('firstname'),
+                            'lastname': player.get('lastname'),
+                            'team': team_id,
+                            'position': player.get('position'),
+                            'photo': player.get('photo'),
+                            'match_score': score
+                        }]
+
+        # Clean name - API requires alphabetic characters only
+        clean_name = ''.join(c for c in name if c.isalpha() or c.isspace())
+        name_parts = clean_name.split()
+        
+        # Generate search variants that meet 4-char minimum
+        search_variants = set()
+        
+        # If we have multiple parts, try combinations
+        if len(name_parts) > 1:
+            # Full name if 4+ chars
+            full_name = ''.join(name_parts)
+            if len(full_name) >= 4:
+                search_variants.add(full_name)
+            
+            # First + Last initial if first name is 4+ chars
+            if len(name_parts[0]) >= 4:
+                search_variants.add(name_parts[0])
+            
+            # Last name if 4+ chars
+            if len(name_parts[-1]) >= 4:
+                search_variants.add(name_parts[-1])
+            
+            # Try middle name if present and 4+ chars
+            if len(name_parts) > 2:
+                for part in name_parts[1:-1]:
+                    if len(part) >= 4:
+                        search_variants.add(part)
+        
+        # If we have a single part that's 4+ chars, use it
+        elif len(clean_name) >= 4:
+            search_variants.add(clean_name)
+            
+        if not search_variants:
+            logger.warning(f"No valid search variants (4+ chars) found for: {name}")
+            return []
+            
+        # Try each variant
+        seen_players = set()  # Track unique players
+        for search_term in search_variants:
+            logger.debug(f"Searching API with term: {search_term}")
+            response = await self._make_request(f"v2/players/search/{search_term}")
+            
+            if response.get('response'):
+                for player in response['response']:
+                    player_id = player['player_id']
+                    if player_id in seen_players:
+                        continue
+                        
+                    seen_players.add(player_id)
+                    score = self._score_player_match_v2(name, player)
+                    
+                    if score > 0.6:  # Higher threshold for general search
+                        result = {
+                            'id': player_id,
+                            'name': player['player_name'],
+                            'firstname': player['firstname'],
+                            'lastname': player['lastname'],
+                            'team': None,
+                            'position': player['position'],
+                            'photo': None,
+                            'match_score': score
+                        }
+                        results.append(result)
+        
+        # Sort by match score
+        results.sort(key=lambda x: x['match_score'], reverse=True)
+        
+        # Return all matches above threshold
+        matches = [r for r in results if r['match_score'] > 0.6]  # Higher threshold
+        if matches:
+            logger.info(f"Found {len(matches)} matches for {name}, best: {matches[0]['name']} (score: {matches[0]['match_score']:.2f})")
+            return matches
+            
+        logger.warning(f"No confident matches found for: {name}")
+        return []
+    
+    def _score_player_match_v2(self, search_name: str, api_player: Dict) -> float:
+        """
+        Improved scoring for player name matches that handles:
+        - Abbreviated first names (e.g. "M. Tel" matches "Mathys Tel")
+        - Middle names
+        - Partial matches
+        
+        Returns:
+            Float score between 0-1, where 1 is perfect match
+        """
+        # Get API player names, safely handling None values
+        api_name = api_player.get('player_name', '').lower()
+        api_first = (api_player.get('firstname') or '').lower()
+        api_last = (api_player.get('lastname') or '').lower()
+        
+        search_name = search_name.lower()
+        search_parts = search_name.split()
+        
+        score = 0.0
+        
+        # Exact full name match
+        if search_name == api_name:
+            return 1.0
+            
+        # Handle single word search
+        if len(search_parts) == 1:
+            search_term = search_parts[0]
+            # Check if it matches last name
+            if search_term == api_last:
+                score += 0.8
+            # Or first name
+            elif search_term == api_first:
+                score += 0.7
+            # Or is contained in either
+            elif search_term in api_last or api_last in search_term:
+                score += 0.4
+            elif search_term in api_first or api_first in search_term:
+                score += 0.3
+            return score
+            
+        # Multiple word search
+        search_first, search_last = search_parts[0], search_parts[-1]
+        
+        # Last name matching (most important)
+        if search_last == api_last:
+            score += 0.6
+        elif search_last in api_last or api_last in search_last:
+            score += 0.3
+            
+        # First name matching
+        if search_first == api_first:
+            score += 0.4
+        # Handle abbreviated first names (e.g. "M. Tel" matches "Mathys Tel")
+        elif len(search_first) == 1 and api_first.startswith(search_first):
+            score += 0.35
+        elif search_first and api_first and search_first[0] == api_first[0]:
+            score += 0.2
+        elif search_first in api_first or api_first in search_first:
+            score += 0.1
+            
+        return min(1.0, score)
+    
+    def _names_match(self, name1: str, name2: str) -> bool:
+        """
+        Helper to check if two names match, handling:
+        - Case differences
+        - Abbreviated first names
+        - Different word orders
+        """
+        name1 = name1.lower()
+        name2 = name2.lower()
+        
+        # Exact match
+        if name1 == name2:
+            return True
+            
+        # Split into parts
+        parts1 = name1.split()
+        parts2 = name2.split()
+        
+        # Handle abbreviated first names
+        if len(parts1) > 1 and len(parts2) > 1:
+            # Check if first parts match as abbreviation
+            first1, first2 = parts1[0], parts2[0]
+            if len(first1) == 1 and first2.startswith(first1):
+                return parts1[-1] == parts2[-1]
+            if len(first2) == 1 and first1.startswith(first2):
+                return parts1[-1] == parts2[-1]
+                
+        # Check if all parts from one name exist in the other
+        return all(part in parts2 for part in parts1) or all(part in parts1 for part in parts2)
     
     async def update_matches(self, status: str = "all"):
         """
@@ -306,9 +562,13 @@ class SimpleFootballAPI:
             List of player dictionaries
         """
         players = []
-        player_dir = os.path.join('data', 'players')
+        player_dir = PROJECT_ROOT / 'backend' / 'data' / 'players'
         
         # Read each player file in the players directory
+        if not player_dir.exists():
+            logger.error(f"Player directory not found: {player_dir}")
+            return []
+            
         for filename in os.listdir(player_dir):
             if filename.endswith('.json'):
                 player_data = self._load_json('players', filename)

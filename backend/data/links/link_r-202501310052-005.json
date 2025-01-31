@@ -1,0 +1,23 @@
+{
+  "players": [
+    {
+      "name": "T. Werner",
+      "current_club": "RB Leipzig",
+      "is_squad_player": false,
+      "id": 1166
+    }
+  ],
+  "clubs": [
+    "RB Leipzig",
+    "NY Red Bulls"
+  ],
+  "transfer_type": "unclear",
+  "direction": "outgoing",
+  "price": {
+    "amount": null,
+    "currency": null
+  },
+  "confidence": null,
+  "news_file": "r-202501310052-005",
+  "last_updated": "2025-01-30T19:52:59.869305"
+}

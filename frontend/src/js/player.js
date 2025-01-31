@@ -17,6 +17,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.querySelector('.player-height').textContent = player.height || 'N/A';
         document.querySelector('.player-weight').textContent = player.weight || 'N/A';
         
+        // Handle squad status badge
+        const squadStatus = document.querySelector('.squad-status');
+        if (player.is_squad_player === false) {
+            squadStatus.textContent = 'Non-Squad Player';
+            squadStatus.classList.remove('hidden');
+            squadStatus.classList.add('bg-gray-100', 'text-gray-800');
+        }
+        
         // Update page title
         document.title = `${player.name} - N17 Dashboard`;
         

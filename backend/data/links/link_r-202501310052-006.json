@@ -1,0 +1,24 @@
+{
+  "players": [
+    {
+      "name": "M. Tel",
+      "current_club": "Bayern Munich",
+      "is_squad_player": false,
+      "id": 270510,
+      "team_id": 157
+    }
+  ],
+  "clubs": [
+    "Tottenham",
+    "Bayern Munich"
+  ],
+  "transfer_type": "unclear",
+  "direction": "incoming",
+  "price": {
+    "amount": null,
+    "currency": null
+  },
+  "confidence": 0,
+  "news_file": "r-202501310052-006",
+  "last_updated": "2025-01-30T19:53:02.430167"
+}

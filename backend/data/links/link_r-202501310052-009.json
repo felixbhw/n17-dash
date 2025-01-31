@@ -1,0 +1,23 @@
+{
+  "players": [
+    {
+      "name": "Y. Wissa",
+      "current_club": "Brentford",
+      "is_squad_player": false,
+      "id": 20649
+    }
+  ],
+  "clubs": [
+    "Tottenham",
+    "Brentford"
+  ],
+  "transfer_type": "unclear",
+  "direction": "incoming",
+  "price": {
+    "amount": null,
+    "currency": null
+  },
+  "confidence": 0,
+  "news_file": "r-202501310052-009",
+  "last_updated": "2025-01-30T19:53:10.765226"
+}

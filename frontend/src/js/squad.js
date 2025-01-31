@@ -41,10 +41,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // Fetch all player files from the data directory
         const response = await fetch('/api/squad');
-        const players = await response.json();
+        const allPlayers = await response.json();
 
-        // Sort players by squad number
-        players.sort((a, b) => (a.number || 99) - (b.number || 99));
+        // Filter to only include squad players and sort by number
+        const players = allPlayers
+            .filter(player => player.is_squad_player !== false)  // Keep undefined (legacy) or true
+            .sort((a, b) => (a.number || 99) - (b.number || 99));
 
         // Populate both grid and table
         players.forEach(player => {
@@ -90,5 +92,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         `;
         squadGrid.innerHTML = errorMessage;
         document.getElementById('squad-table').innerHTML = errorMessage;
+    }
+});
+
+// Mobile menu toggle
+document.addEventListener('DOMContentLoaded', function() {
+    const mobileMenuButton = document.querySelector('[aria-controls="mobile-menu"]');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    if (mobileMenuButton && mobileMenu) {
+        mobileMenuButton.addEventListener('click', function() {
+            const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true';
+            mobileMenuButton.setAttribute('aria-expanded', !isExpanded);
+            mobileMenu.classList.toggle('hidden');
+        });
     }
 });

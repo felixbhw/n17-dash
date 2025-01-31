@@ -40,7 +40,6 @@ class RedditService:
         
         # Ensure directories exist
         (self.data_dir / 'news').mkdir(parents=True, exist_ok=True)
-        (self.data_dir / 'links').mkdir(parents=True, exist_ok=True)
         
         # Tier mappings (r/coys flair -> our system)
         self.tier_mappings = {
@@ -73,14 +72,6 @@ class RedditService:
         logger.info(f"Loaded {len(processed)} previously processed posts")
         return processed
     
-    def _extract_player_info(self, title: str, content: str) -> List[int]:
-        """Extract player IDs from post - placeholder for future LLM integration"""
-        return []
-    
-    def _extract_club_info(self, title: str, content: str) -> List[dict]:
-        """Extract club info from post - placeholder for future LLM integration"""
-        return [{"id": 47, "name": "Tottenham"}]
-    
     def _get_tier_from_flair(self, flair: str) -> Optional[int]:
         """Convert r/coys flair to our tier system"""
         return self.tier_mappings.get(flair)
@@ -98,14 +89,14 @@ class RedditService:
             "url": f"https://reddit.com{post.permalink}",
             "title": post.title,
             "content": post.selftext,
-            "related_players": self._extract_player_info(post.title, post.selftext),
-            "related_clubs": self._extract_club_info(post.title, post.selftext),
-            "related_links": [],
-            "sentiment": {
+            "related_players": [],  # Will be filled by LLM
+            "related_clubs": [],    # Will be filled by LLM
+            "related_links": [],    # Will be filled by LLM
+            "sentiment": {          # Will be filled by LLM
                 "score": 0,
                 "confidence": 0
             },
-            "keywords": []
+            "keywords": []          # Will be filled by LLM
         }
         
         filepath = self.data_dir / 'news' / f"{news_id}.json"
@@ -115,28 +106,6 @@ class RedditService:
         
         logger.info(f"Created news file {news_id} for post {post.id}")
         return news_id
-    
-    def _update_or_create_link_file(self, post, news_id: str, tier: int):
-        """Update existing or create new link file based on transfer news"""
-        link_data = {
-            "player_id": None,  # Will be filled by LLM
-            "status": "rumor",
-            "direction": "unclear",
-            "type": "unclear",
-            "current_club": None,
-            "interested_clubs": [],
-            "rumored_price": None,
-            "related_news": [news_id],
-            "last_updated": datetime.utcnow().isoformat(),
-            "confidence": 0
-        }
-        
-        temp_file = self.data_dir / 'links' / f"temp_{news_id}.json"
-        logger.debug(f"Creating link file at: {temp_file}")
-        with open(temp_file, 'w') as f:
-            json.dump(link_data, f, indent=2)
-        
-        logger.info(f"Created temporary link file for news {news_id}")
     
     async def process_transfer_post(self, post) -> Tuple[Optional[str], bool]:
         """Process a transfer-related post
@@ -164,7 +133,6 @@ class RedditService:
         
         # Create new news file
         news_id = self._create_news_file(post, tier)
-        self._update_or_create_link_file(post, news_id, tier)
         
         # Update processed posts
         self.processed_posts[post.id] = {
