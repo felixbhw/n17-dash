@@ -1,0 +1,76 @@
+{
+  "player_id": 21104,
+  "canonical_name": "Randal Kolo Muani",
+  "transfer_status": "archived",
+  "timeline": [
+    {
+      "event_type": "discussions",
+      "details": "Tottenham have held discussions over signing Randal Kolo Muani from PSG.",
+      "confidence": 70,
+      "date": "2025-01-31T14:51:23.395122",
+      "news_ids": [
+        "r-202501311450-1hxkkju"
+      ]
+    },
+    {
+      "event_type": "discussions",
+      "details": "Juventus and Tottenham have both made contact again today with Paris Saint-Germain for Randal Kolo Muani.",
+      "confidence": 80,
+      "date": "2025-01-31T14:51:53.471523",
+      "news_ids": [
+        "r-202501311451-1i0iy84"
+      ]
+    },
+    {
+      "event_type": "loan agreement",
+      "details": "Luis Enrique has given Randal Kolo Muani permission to leave\u2026 PSG insist that it must be a loan deal with obligation.",
+      "confidence": 75,
+      "date": "2025-01-31T14:52:27.820054",
+      "news_ids": [
+        "r-202501311452-1hw47go"
+      ]
+    },
+    {
+      "event_type": "offer",
+      "details": "Tottenham have made an offer for Randal Kolo Muani on loan with an option to buy.",
+      "confidence": 85,
+      "date": "2025-01-31T14:52:45.228542",
+      "news_ids": [
+        "r-202501311452-1i1445o"
+      ]
+    },
+    {
+      "event_type": "contact",
+      "details": "Tottenham Hotspur are understood to have made contact with Paris Saint-Germain to understand the conditions of a deal for Randal Kolo Muani.",
+      "confidence": 80,
+      "date": "2025-01-31T14:55:25.271907",
+      "news_ids": [
+        "r-202501311455-1hv0foj"
+      ]
+    }
+  ],
+  "related_clubs": [
+    {
+      "name": "PSG",
+      "role": "current"
+    },
+    {
+      "name": "Tottenham Hotspur",
+      "role": "interested"
+    },
+    {
+      "name": "Juventus",
+      "role": "destination"
+    },
+    {
+      "name": "Manchester United",
+      "role": "interested"
+    },
+    {
+      "name": "Borussia Dortmund",
+      "role": "interested"
+    }
+  ],
+  "direction": "incoming",
+  "last_updated": "2025-01-31T15:03:46.000250"
+}

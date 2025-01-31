@@ -173,17 +173,13 @@ function initTables() {
 function populateEditModal(playerId) {
     editingPlayer = playerId;
     
-    // Fetch player data
     $.get(`/api/links/player/${playerId}`)
         .done(function(data) {
-            $('#editPlayerId').val(playerId);
+            $('#editPlayerId').val(playerId).prop('readonly', false);  // Make ID editable
             $('#editStatus').val(data.transfer_status || '');
             $('#editDirection').val(data.direction || '');
             
-            // Clear existing clubs
             $('#editClubs').empty();
-            
-            // Add existing clubs
             if (data.related_clubs && data.related_clubs.length) {
                 data.related_clubs.forEach(club => {
                     addClubEntry(club.name, club.role);
@@ -212,26 +208,26 @@ function addClubEntry(name = '', role = 'interested') {
 }
 
 function savePlayerChanges() {
-    const playerId = editingPlayer;
-    if (!playerId) return;
+    const oldPlayerId = editingPlayer;
+    const newPlayerId = parseInt($('#editPlayerId').val());
     
-    const clubs = [];
+    const data = {
+        player_id: newPlayerId,  // Include new ID in update
+        transfer_status: $('#editStatus').val(),
+        direction: $('#editDirection').val(),
+        related_clubs: []
+    };
+    
     $('#editClubs .club-entry').each(function() {
         const name = $(this).find('.club-name').val();
         const role = $(this).find('.club-role').val();
         if (name) {
-            clubs.push({ name, role });
+            data.related_clubs.push({ name, role });
         }
     });
     
-    const data = {
-        transfer_status: $('#editStatus').val(),
-        direction: $('#editDirection').val(),
-        related_clubs: clubs
-    };
-    
     $.ajax({
-        url: `/api/links/player/${playerId}`,
+        url: `/api/links/player/${oldPlayerId}`,
         method: 'PUT',
         contentType: 'application/json',
         data: JSON.stringify(data)
@@ -290,6 +286,30 @@ function deleteEvent(playerId, eventIndex) {
     });
 }
 
+function refreshData() {
+    return new Promise((resolve, reject) => {
+        try {
+            // Create a counter to track completed reloads
+            let completed = 0;
+            const total = 2;
+
+            // Function to check if all reloads are done
+            const checkComplete = () => {
+                completed++;
+                if (completed === total) {
+                    resolve();
+                }
+            };
+
+            // Reload both tables
+            playerLinksTable.ajax.reload(checkComplete);
+            timelineTable.ajax.reload(checkComplete);
+        } catch (error) {
+            reject(error);
+        }
+    });
+}
+
 $(document).ready(function() {
     // Initialize DataTables
     initTables();
@@ -328,5 +348,118 @@ $(document).ready(function() {
     // Remove club button - Use event delegation
     $(document).on('click', '.remove-club', function() {
         $(this).closest('.club-entry').remove();
+    });
+
+    // Add Player button handler
+    $('#addPlayerBtn').click(function() {
+        $('#newPlayerName').val('');
+        $('#newPlayerId').val('');
+        $('#addPlayerModal').modal('show');
+    });
+    
+    // Save new player handler
+    $('#saveNewPlayerBtn').click(function() {
+        const name = $('#newPlayerName').val().trim();
+        const id = $('#newPlayerId').val().trim();
+        
+        if (!name || !id) {
+            alert('Please fill in all fields');
+            return;
+        }
+        
+        $.ajax({
+            url: '/api/links/players/manual',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                name: name,
+                player_id: parseInt(id)
+            })
+        })
+        .done(function() {
+            $('#addPlayerModal').modal('hide');
+            playerLinksTable.ajax.reload();
+            timelineTable.ajax.reload();
+        })
+        .fail(function(jqXHR) {
+            alert('Error creating player: ' + jqXHR.responseText);
+        });
+    });
+    
+    // Link news button handler
+    $(document).on('click', '.link-news', function() {
+        const playerId = $(this).data('player-id');
+        $('#linkNewsPlayerId').val(playerId);
+        $('#linkNewsId').val('');
+        $('#linkNewsModal').modal('show');
+    });
+    
+    // Save news link handler
+    $('#saveLinkNewsBtn').click(function() {
+        const playerId = $('#linkNewsPlayerId').val();
+        const newsId = $('#linkNewsId').val().trim();
+        
+        if (!newsId) {
+            alert('Please enter a news ID');
+            return;
+        }
+        
+        $.ajax({
+            url: `/api/links/player/${playerId}/link-news`,
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                news_id: newsId
+            })
+        })
+        .done(function() {
+            $('#linkNewsModal').modal('hide');
+            playerLinksTable.ajax.reload();
+            timelineTable.ajax.reload();
+        })
+        .fail(function(jqXHR) {
+            alert('Error linking news: ' + jqXHR.responseText);
+        });
+    });
+    
+    // Update refresh button handler to include unlinked news processing
+    $('#refreshNewsBtn').click(function() {
+        const $btn = $(this);
+        
+        $btn.prop('disabled', true)
+            .html('<i class="fas fa-spinner fa-spin me-2"></i>Checking...');
+            
+        // First process new news
+        $.ajax({
+            url: '/api/reddit/check-now',
+            method: 'POST'
+        })
+        .then(() => {
+            // Then reprocess unlinked news
+            return $.ajax({
+                url: '/api/links/reprocess-unlinked',
+                method: 'POST'
+            });
+        })
+        .then(() => refreshData())
+        .then(() => {
+            $btn.removeClass('btn-primary')
+                .addClass('btn-success')
+                .html('<i class="fas fa-check me-2"></i>Updated!');
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+            $btn.removeClass('btn-primary')
+                .addClass('btn-danger')
+                .html('<i class="fas fa-exclamation-triangle me-2"></i>Error');
+        })
+        .always(() => {
+            setTimeout(() => {
+                $btn.prop('disabled', false)
+                    .removeClass('btn-success btn-danger')
+                    .addClass('btn-primary')
+                    .html('<i class="fas fa-sync-alt me-2"></i>Check for New Updates');
+            }, 2000);
+        });
     });
 }); 

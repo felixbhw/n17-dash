@@ -1,0 +1,22 @@
+{
+  "player_id": 198,
+  "canonical_name": "Milan Skriniar",
+  "transfer_status": "archived",
+  "timeline": [],
+  "related_clubs": [
+    {
+      "name": "Galatasaray",
+      "role": "destination"
+    },
+    {
+      "name": "Napoli",
+      "role": "interested"
+    },
+    {
+      "name": "Tottenham",
+      "role": "interested"
+    }
+  ],
+  "direction": "",
+  "last_updated": "2025-01-31T15:03:03.325546"
+}

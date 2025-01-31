@@ -3,19 +3,20 @@ import json
 from pathlib import Path
 import os
 import logging
-from ..background import get_background_tasks
-from typing import Dict, Any
 from datetime import datetime, timedelta
+from typing import Dict, Any
 from ..services.reddit_service import RedditService
 from ..services.llm_service import LLMService
+from ..background import get_background_tasks
 
 router = APIRouter()
-reddit_service = RedditService()
-llm_service = LLMService()
-
 logger = logging.getLogger(__name__)
 
 DATA_DIR = Path(__file__).parent.parent.parent / 'data'
+
+# Initialize services
+reddit_service = RedditService()
+llm_service = LLMService()
 
 # Helper function to load JSON data
 def load_json_file(file_path: Path) -> dict:
@@ -129,29 +130,6 @@ async def get_player_stats(player_id: str):
     except Exception as e:
         logger.error(f"Error loading stats for player {player_id}: {str(e)}")
         raise HTTPException(status_code=404, detail=f"Stats not found: {str(e)}")
-
-@router.post("/reddit/fetch-historical")
-async def fetch_historical_posts(days: int = 7) -> Dict[str, int]:
-    """Fetch historical transfer posts from r/coys
-    
-    Args:
-        days: Number of days to look back (default: 7)
-    
-    Returns:
-        Stats about processed posts
-    """
-    if days < 1 or days > 30:
-        raise HTTPException(status_code=400, detail="Days must be between 1 and 30")
-    
-    background_tasks = get_background_tasks()
-    
-    # Fetch historical posts
-    stats = await background_tasks.reddit_service.fetch_historical(days)
-    
-    # Process any new news files with LLM
-    await background_tasks.llm_service.process_pending_news()
-    
-    return stats
 
 @router.post("/squad/update")
 async def update_squad():
@@ -300,28 +278,6 @@ async def get_transfer_events():
         logger.error(f"Error getting transfer events: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
-@router.get("/reddit/historical/{days}")
-async def fetch_historical_posts(days: int) -> Dict[str, Any]:
-    """Fetch historical transfer posts from r/coys
-    
-    Args:
-        days: Number of days to look back
-        
-    Returns:
-        Dict with status and stats about processed posts
-    """
-    if days < 1 or days > 30:
-        raise HTTPException(
-            status_code=400,
-            detail="Days must be between 1 and 30"
-        )
-    
-    stats = await reddit_service.fetch_historical(days)
-    return {
-        "status": "success",
-        "stats": stats
-    }
-
 @router.post("/links/players/update-stats")
 async def update_transfer_linked_players_stats():
     """Update stats for all players with transfer links from API-Football"""
@@ -337,30 +293,81 @@ async def update_transfer_linked_players_stats():
 async def update_player_link(player_id: int, update_data: dict):
     """Update transfer link information for a player"""
     try:
-        player_file = DATA_DIR / 'links' / f"player_{player_id}.json"
-        
-        if not player_file.exists():
-            raise HTTPException(status_code=404, detail="Player link data not found")
-        
-        # Read existing data
-        with open(player_file) as f:
-            current_data = json.load(f)
-        
-        # Update allowed fields
-        allowed_fields = ['transfer_status', 'direction', 'related_clubs', 'timeline']
-        for field in allowed_fields:
-            if field in update_data:
-                current_data[field] = update_data[field]
-        
-        # Update timestamp
-        current_data['last_updated'] = datetime.now().isoformat()
-        
-        # Save updated data
-        with open(player_file, 'w') as f:
-            json.dump(current_data, f, indent=2)
-        
-        return {"status": "success", "message": "Player link data updated"}
-        
+        # If player ID is being changed, handle the file rename
+        new_player_id = update_data.get('player_id')
+        if new_player_id and new_player_id != player_id:
+            old_file = DATA_DIR / 'links' / f"player_{player_id}.json"
+            new_file = DATA_DIR / 'links' / f"player_{new_player_id}.json"
+            
+            # Check if new ID already exists
+            if new_file.exists():
+                raise HTTPException(
+                    status_code=400,
+                    detail=f"Player with ID {new_player_id} already exists"
+                )
+            
+            # Read existing data
+            if not old_file.exists():
+                raise HTTPException(
+                    status_code=404,
+                    detail="Player link data not found"
+                )
+                
+            with open(old_file) as f:
+                current_data = json.load(f)
+            
+            # Update the player ID and other fields
+            current_data['player_id'] = new_player_id
+            for field in ['transfer_status', 'direction', 'related_clubs']:
+                if field in update_data:
+                    current_data[field] = update_data[field]
+            
+            # Update timestamp
+            current_data['last_updated'] = datetime.now().isoformat()
+            
+            # Save to new file and delete old
+            with open(new_file, 'w') as f:
+                json.dump(current_data, f, indent=2)
+            old_file.unlink()
+            
+            # Fetch new player stats if needed
+            try:
+                await llm_service._ensure_player_stats(new_player_id, current_data['canonical_name'])
+            except Exception as e:
+                logger.warning(f"Error fetching stats for new player ID: {e}")
+            
+            return {"status": "success", "message": "Player link data updated with new ID"}
+            
+        else:
+            # Regular update without ID change
+            player_file = DATA_DIR / 'links' / f"player_{player_id}.json"
+            
+            if not player_file.exists():
+                raise HTTPException(
+                    status_code=404,
+                    detail="Player link data not found"
+                )
+            
+            # Read existing data
+            with open(player_file) as f:
+                current_data = json.load(f)
+            
+            # Update allowed fields
+            for field in ['transfer_status', 'direction', 'related_clubs']:
+                if field in update_data:
+                    current_data[field] = update_data[field]
+            
+            # Update timestamp
+            current_data['last_updated'] = datetime.now().isoformat()
+            
+            # Save updated data
+            with open(player_file, 'w') as f:
+                json.dump(current_data, f, indent=2)
+            
+            return {"status": "success", "message": "Player link data updated"}
+            
+    except HTTPException:
+        raise
     except Exception as e:
         logger.error(f"Error updating player link data: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
@@ -437,3 +444,139 @@ async def delete_timeline_event(player_id: int, event_index: int):
     except Exception as e:
         logger.error(f"Error deleting timeline event: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/reddit/check-now")
+async def check_reddit_now():
+    """Manually trigger a Reddit check and LLM processing"""
+    try:
+        # Get the existing background tasks instance
+        background_tasks = get_background_tasks()
+        
+        # Run Reddit check
+        await background_tasks.reddit_service.check_new_posts()
+        
+        # Process any new news files with LLM
+        await background_tasks.llm_service.process_pending_news()
+        
+        return {"status": "success", "message": "Reddit check and LLM processing completed"}
+    except Exception as e:
+        logger.error(f"Manual refresh failed: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/links/players/manual")
+async def create_manual_player(player_data: dict):
+    """Create a player record manually with API-Football ID"""
+    try:
+        name = player_data.get('name')
+        player_id = player_data.get('player_id')
+        
+        if not name or not player_id:
+            raise HTTPException(
+                status_code=400,
+                detail="Both name and player_id are required"
+            )
+            
+        result = await llm_service.create_manual_player(name, player_id)
+        return result
+        
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        logger.error(f"Error creating manual player: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/links/player/{player_id}/link-news")
+async def link_news_to_player(player_id: int, data: dict):
+    """Manually link a news item to a player"""
+    try:
+        news_id = data.get('news_id')
+        if not news_id:
+            raise HTTPException(
+                status_code=400,
+                detail="news_id is required"
+            )
+            
+        result = await llm_service.link_news_to_player(player_id, news_id)
+        return result
+        
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        logger.error(f"Error linking news to player: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/links/reprocess-unlinked")
+async def reprocess_unlinked_news():
+    """Reprocess all unlinked news items"""
+    try:
+        # Get all unlinked news
+        unlinked_news = llm_service._get_unlinked_news()
+        
+        # Process each unlinked news file
+        processed_count = 0
+        for news_file in unlinked_news:
+            try:
+                await llm_service.process_news_file(news_file)
+                processed_count += 1
+            except Exception as e:
+                logger.error(f"Error processing news file {news_file.name}: {e}")
+                continue
+                
+        return {
+            "status": "success",
+            "processed_count": processed_count,
+            "total_unlinked": len(unlinked_news)
+        }
+        
+    except Exception as e:
+        logger.error(f"Error reprocessing unlinked news: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.api_route("/reddit/fetch-historical/{days}", methods=["GET", "POST"])
+async def fetch_historical_posts(days: int):
+    """
+    Fetch and process historical transfer posts from r/coys.
+    Supports both GET and POST methods.
+    
+    Args:
+        days: Number of days to look back (1-30)
+        
+    Returns:
+        Dict with status and detailed stats about processed posts
+    """
+    if days < 1 or days > 30:
+        raise HTTPException(
+            status_code=400,
+            detail="Days must be between 1 and 30"
+        )
+    
+    try:
+        # Get background tasks instance
+        background_tasks = get_background_tasks()
+        
+        # Fetch historical posts
+        logger.info(f"Starting historical fetch for past {days} days")
+        stats = await background_tasks.reddit_service.fetch_historical(days)
+        
+        # Process new posts with LLM if any were saved
+        if stats['saved'] > 0:
+            logger.info("Processing new posts with LLM")
+            await background_tasks.llm_service.process_pending_news()
+        
+        return {
+            "status": "success",
+            "message": f"Fetched and processed posts from past {days} days",
+            "stats": {
+                "posts_processed": stats['processed'],
+                "posts_saved": stats['saved'],
+                "posts_skipped": stats['skipped'],
+                "errors": stats['errors']
+            }
+        }
+        
+    except Exception as e:
+        logger.error(f"Historical fetch failed: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Historical fetch failed: {str(e)}"
+        )

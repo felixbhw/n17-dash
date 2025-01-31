@@ -1,0 +1,25 @@
+{
+  "player_id": 1165,
+  "canonical_name": "Matheus Cunha",
+  "transfer_status": "rumors",
+  "timeline": [],
+  "related_clubs": [
+    {
+      "name": "Nottingham Forest",
+      "role": "interested"
+    },
+    {
+      "name": "Arsenal",
+      "role": "interested"
+    },
+    {
+      "name": "Chelsea",
+      "role": "interested"
+    },
+    {
+      "name": "Spurs",
+      "role": "interested"
+    }
+  ],
+  "direction": null
+}

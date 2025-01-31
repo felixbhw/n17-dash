@@ -1,0 +1,22 @@
+{
+  "player_id": 909,
+  "canonical_name": "Marcus Rashford",
+  "transfer_status": "hearsay",
+  "timeline": [],
+  "related_clubs": [
+    {
+      "name": "Tottenham Hotspur",
+      "role": "interested"
+    },
+    {
+      "name": "Dortmund",
+      "role": "interested"
+    },
+    {
+      "name": "Manchester United",
+      "role": "current"
+    }
+  ],
+  "direction": "incoming",
+  "last_updated": "2025-01-31T15:02:38.489617"
+}

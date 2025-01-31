@@ -45,16 +45,17 @@ app.add_middleware(
 PROJECT_ROOT = Path(__file__).parent.parent.parent
 
 # Mount static files and templates
-app.mount("/static", StaticFiles(directory=str(PROJECT_ROOT / "frontend")), name="static")
+app.mount("/static/css", StaticFiles(directory=str(PROJECT_ROOT / "frontend" / "src" / "css")), name="static_css")
+app.mount("/static/js", StaticFiles(directory=str(PROJECT_ROOT / "frontend" / "src" / "js")), name="static_js")
+
+# Initialize services
+llm_service = LLMService()
+reddit_service = RedditService(llm_service=llm_service)
 
 # Include routers
 app.include_router(api.router, prefix="/api")  # API routes first
 app.include_router(pages.router)  # Then page routes
 app.include_router(views.router)  # Finally template routes
-
-# Initialize services
-reddit_service = RedditService()
-llm_service = LLMService()
 
 @app.on_event("startup")
 async def startup_event():

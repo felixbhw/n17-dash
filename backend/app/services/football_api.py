@@ -131,4 +131,73 @@ class FootballAPI:
     async def close(self):
         """Close the aiohttp session"""
         if self.session and not self.session.closed:
-            await self.session.close() 
+            await self.session.close()
+
+    async def get_player_info(self, player_id: int) -> dict:
+        """Fetch player information from API-Football v2 using search"""
+        try:
+            session = await self.ensure_session()
+            
+            # Use v2 API endpoint
+            v2_url = "https://v2.api-football.com"
+            v2_headers = {"x-apisports-key": self.headers["x-apisports-key"]}
+            
+            # First search for the player by ID in the search results
+            response = await session.get(
+                f"{v2_url}/players/search/disasi",  # Search by last name
+                headers=v2_headers
+            )
+            
+            if response.status != 200:
+                raise Exception(f"API error: {response.status}")
+                
+            data = await response.json()
+            
+            # v2 API response format for search
+            if not data.get('api', {}).get('results'):
+                return None
+            
+            # Find the player with matching ID in search results
+            players = data['api']['players']
+            for player in players:
+                if player.get('player_id') == player_id:
+                    return player
+                    
+            return None
+            
+        except Exception as e:
+            logger.error(f"Error fetching player info for ID {player_id}: {e}")
+            return None 
+
+    async def search_players(self, name: str) -> list:
+        """Search for players by name using API-Football v2"""
+        try:
+            session = await self.ensure_session()
+            
+            # Use v2 API endpoint
+            v2_url = "https://v2.api-football.com"
+            v2_headers = {"x-apisports-key": self.headers["x-apisports-key"]}
+            
+            # Extract last name and ensure it's at least 4 characters
+            last_name = name.split()[-1].lower()
+            if len(last_name) < 4:
+                raise ValueError("Last name must be at least 4 characters")
+            
+            response = await session.get(
+                f"{v2_url}/players/search/{last_name}",
+                headers=v2_headers
+            )
+            
+            if response.status != 200:
+                raise Exception(f"API error: {response.status}")
+                
+            data = await response.json()
+            
+            if not data.get('api', {}).get('results'):
+                return []
+                
+            return data['api']['players']
+            
+        except Exception as e:
+            logger.error(f"Error searching players with name {name}: {e}")
+            return [] 

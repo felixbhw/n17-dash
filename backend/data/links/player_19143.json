@@ -1,0 +1,37 @@
+{
+  "player_id": 19143,
+  "canonical_name": "Sam Johnstone",
+  "transfer_status": "archived",
+  "timeline": [
+    {
+      "event_type": "interest",
+      "details": "Tottenham has looked at Sam Johnstone as potential cover for Guglielmo Vicario.",
+      "confidence": 65,
+      "date": "2025-01-31T14:53:14.493771",
+      "news_ids": [
+        "r-202501311452-1hs0kde"
+      ]
+    },
+    {
+      "event_type": "interest",
+      "details": "Sam Johnstone emerging as a strong candidate for Spurs as they search for a goalkeeper as back for Vicario.",
+      "confidence": 75,
+      "date": "2025-01-31T14:55:32.803418",
+      "news_ids": [
+        "r-202501311455-1hs0k6y"
+      ]
+    }
+  ],
+  "related_clubs": [
+    {
+      "name": "Tottenham Hotspur",
+      "role": "interested"
+    },
+    {
+      "name": "Wolverhampton Wanderers",
+      "role": "current"
+    }
+  ],
+  "direction": "incoming",
+  "last_updated": "2025-01-31T15:04:54.441291"
+}

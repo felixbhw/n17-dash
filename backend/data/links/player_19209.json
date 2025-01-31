@@ -20,6 +20,42 @@
       "news_ids": [
         "r-202501311014-1iegy06"
       ]
+    },
+    {
+      "event_type": "transfer speculation",
+      "details": "Fikayo Tomori is a possibility for Tottenham. Various talks underway",
+      "confidence": 75,
+      "date": "2025-01-31T11:41:29.428595",
+      "news_ids": [
+        "r-202501311141-1ieizbr"
+      ]
+    },
+    {
+      "event_type": "transfer speculation",
+      "details": "Milan, Tottenham is close to Fikayo Tomori: offer of 30 million euros for the defender.",
+      "confidence": 80,
+      "date": "2025-01-31T13:20:17.987198",
+      "news_ids": [
+        "r-202501311320-1ielcjk"
+      ]
+    },
+    {
+      "event_type": "transfer speculation",
+      "details": "Tottenham for Tomori track is entering its operational phase. Milan wants to cash in and the verbal proposal exceeds 25M.",
+      "confidence": 85,
+      "date": "2025-01-31T13:40:49.555367",
+      "news_ids": [
+        "r-202501311340-1ielvgj"
+      ]
+    },
+    {
+      "event_type": "transfer speculation",
+      "details": "Milan and Tottenham reach verbal agreement for Tomori. Deal of 25 million euros + 5 million bonus. Now awaiting the players decision.",
+      "confidence": 90,
+      "date": "2025-01-31T15:12:03.206334",
+      "news_ids": [
+        "r-202501311511-1ieo0sc"
+      ]
     }
   ],
   "related_clubs": [
@@ -30,6 +66,18 @@
     {
       "name": "Aston Villa",
       "role": "interested"
+    },
+    {
+      "name": "Milan",
+      "role": "interested"
+    },
+    {
+      "name": "Milan",
+      "role": "current"
+    },
+    {
+      "name": "Tottenham",
+      "role": "destination"
     }
   ],
   "direction": "incoming",

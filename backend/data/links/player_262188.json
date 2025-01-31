@@ -1,0 +1,32 @@
+{
+  "player_id": 262188,
+  "canonical_name": "Jhonny Cardoso",
+  "transfer_status": "developing",
+  "timeline": [
+    {
+      "event_type": "interest",
+      "details": "Wolves are keen on signing Jhonny Cardoso with Tottenham having a \u20ac25m buy option.",
+      "confidence": 70,
+      "date": "2025-01-31T14:55:15.053612",
+      "news_ids": [
+        "r-202501311454-1i8fw26"
+      ]
+    }
+  ],
+  "related_clubs": [
+    {
+      "name": "Wolves",
+      "role": "interested"
+    },
+    {
+      "name": "Tottenham",
+      "role": "interested"
+    },
+    {
+      "name": "Real Betis",
+      "role": "current"
+    }
+  ],
+  "direction": "incoming",
+  "last_updated": "2025-01-31T15:05:28.666442"
+}

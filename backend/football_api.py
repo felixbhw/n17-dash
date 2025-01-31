@@ -670,6 +670,70 @@ class SimpleFootballAPI:
             logger.error(f"Error updating transfer linked players stats: {e}")
             raise Exception(f"Failed to update player stats: {str(e)}")
 
+    async def get_player_info(self, player_id: int) -> Dict:
+        """
+        Get player information using search results to validate the ID.
+        Args:
+            player_id: The player's API-Football ID
+        Returns:
+            Player information dictionary or None if not found
+        """
+        try:
+            # First try direct v3 endpoint
+            response = await self._make_request(
+                'players',
+                {
+                    'id': player_id,
+                    'season': CURRENT_SEASON
+                }
+            )
+            
+            if response and response.get('response'):
+                return response['response'][0]['player']
+
+            # If v3 fails, try v2 endpoint
+            response = await self._make_request(
+                'v2/players/player/' + str(player_id),
+                {}
+            )
+            
+            if response and response.get('response'):
+                return response['response'][0]
+
+            return None
+            
+        except Exception as e:
+            logger.error(f"Error getting player info for ID {player_id}: {e}")
+            return None
+
+    async def search_players(self, name: str) -> List[Dict]:
+        """
+        Search for players by name using API-Football v2.
+        Args:
+            name: Player name to search for
+        Returns:
+            List of player dictionaries from the API
+        """
+        try:
+            # Extract last name and ensure it's at least 4 characters
+            last_name = name.split()[-1].lower()
+            if len(last_name) < 4:
+                raise ValueError("Last name must be at least 4 characters")
+
+            # Use v2 endpoint for search
+            response = await self._make_request(
+                'v2/players/search/' + last_name,
+                {}
+            )
+            
+            if response and response.get('response'):
+                return response['response']
+            return []
+            
+        except Exception as e:
+            logger.error(f"Error searching for player {name}: {e}")
+            return []
+
 # Example usage:
 async def main():
     """Example of how to use the API client."""

@@ -1,0 +1,37 @@
+{
+  "player_id": 265826,
+  "canonical_name": "Anton\u00edn Kinsky",
+  "transfer_status": "archived",
+  "timeline": [
+    {
+      "event_type": "medical",
+      "details": "Anton\u00edn Kinsky is in London for a medical after today's game.",
+      "confidence": 85,
+      "date": "2025-01-31T14:49:48.181428",
+      "news_ids": [
+        "r-202501311449-1htbj9x"
+      ]
+    },
+    {
+      "event_type": "contract signing",
+      "details": "Anton\u00edn Kinsky is set to sign a 5.5-year contract with Tottenham Hotspur.",
+      "confidence": 90,
+      "date": "2025-01-31T14:50:56.826426",
+      "news_ids": [
+        "r-202501311450-1htcrzo"
+      ]
+    }
+  ],
+  "related_clubs": [
+    {
+      "name": "Slavia Prague",
+      "role": "current"
+    },
+    {
+      "name": "Tottenham",
+      "role": "destination"
+    }
+  ],
+  "direction": "incoming",
+  "last_updated": "2025-01-31T15:02:11.942943"
+}

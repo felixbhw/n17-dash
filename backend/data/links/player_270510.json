@@ -65,6 +65,42 @@
       "news_ids": [
         "r-202501310948-1iegdnz"
       ]
+    },
+    {
+      "event_type": "meeting",
+      "details": "Tottenham boss Daniel Levy is in Munich now, meeting directly with Mathys Tel and his agent to convince him to join Spurs.",
+      "confidence": 85,
+      "date": "2025-01-31T11:39:25.254248",
+      "news_ids": [
+        "r-202501311139-1ieirhu"
+      ]
+    },
+    {
+      "event_type": "decision",
+      "details": "Mathys Tel has informed Tottenham about his decision to reject their proposal.",
+      "confidence": 90,
+      "date": "2025-01-31T12:34:01.641465",
+      "news_ids": [
+        "r-202501311233-1iejmzz"
+      ]
+    },
+    {
+      "event_type": "talks",
+      "details": "Chelsea remain in talks since beginning of January, pushing for a permanent transfer.",
+      "confidence": 80,
+      "date": "2025-01-31T14:41:20.370534",
+      "news_ids": [
+        "r-202501311441-1id4g0i"
+      ]
+    },
+    {
+      "event_type": "talks",
+      "details": "Manchester United and Tottenham are among 7 clubs calling for Mathys Tel in the last 24h as potential loan option.",
+      "confidence": 80,
+      "date": "2025-01-31T14:42:30.449378",
+      "news_ids": [
+        "r-202501311442-1icyywf"
+      ]
     }
   ],
   "related_clubs": [
@@ -101,5 +137,6 @@
       "role": "interested"
     }
   ],
-  "direction": "incoming"
+  "direction": "incoming",
+  "last_updated": "2025-01-31T12:41:29.558994"
 }

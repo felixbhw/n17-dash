@@ -1,0 +1,28 @@
+{
+  "player_id": 1166,
+  "canonical_name": "Timo Werner",
+  "transfer_status": "hearsay",
+  "timeline": [
+    {
+      "event_type": "exploratory talks",
+      "details": "Napoli has held exploratory talks for Timo Werner; a possible deal could be unlocked after the North London derby.",
+      "confidence": 70,
+      "date": "2025-01-31T14:50:31.912142",
+      "news_ids": [
+        "r-202501311450-1i0q8jw"
+      ]
+    }
+  ],
+  "related_clubs": [
+    {
+      "name": "Napoli",
+      "role": "interested"
+    },
+    {
+      "name": "Tottenham",
+      "role": "current"
+    }
+  ],
+  "direction": "outgoing",
+  "last_updated": "2025-01-31T15:03:32.201302"
+}

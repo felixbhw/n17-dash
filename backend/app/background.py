@@ -66,12 +66,34 @@ class BackgroundTasks:
                 logger.error(f"Error in news processor: {e}")
                 await asyncio.sleep(300)  # Wait longer after error
 
+    async def reprocess_unlinked(self):
+        """Reprocess all unlinked news items"""
+        try:
+            unlinked_news = self.llm_service._get_unlinked_news()
+            
+            for news_file in unlinked_news:
+                try:
+                    await self.llm_service.process_news_file(news_file)
+                except Exception as e:
+                    logger.error(f"Error processing news file {news_file.name}: {e}")
+                    continue
+                
+            return True
+        except Exception as e:
+            logger.error(f"Error reprocessing unlinked news: {e}")
+            return False
+
 # Global instance
 _instance: Optional[BackgroundTasks] = None
 
-def get_background_tasks(reddit_service: RedditService, llm_service: LLMService) -> BackgroundTasks:
+def get_background_tasks(
+    reddit_service: Optional[RedditService] = None,
+    llm_service: Optional[LLMService] = None
+) -> BackgroundTasks:
     """Get or create the global background tasks instance"""
     global _instance
     if _instance is None:
+        if not reddit_service or not llm_service:
+            raise ValueError("Services must be provided for first initialization")
         _instance = BackgroundTasks(reddit_service, llm_service)
     return _instance 

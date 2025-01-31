@@ -1,0 +1,24 @@
+{
+  "player_id": 311817,
+  "canonical_name": "Alfie Dorrington",
+  "transfer_status": "here we go!",
+  "timeline": [
+    {
+      "event_type": "loan",
+      "details": "Alfie Dorrington to be sent on loan for regular playing time.",
+      "confidence": 75,
+      "date": "2025-01-31T14:51:47.782366",
+      "news_ids": [
+        "r-202501311451-1hyayy0"
+      ]
+    }
+  ],
+  "related_clubs": [
+    {
+      "name": "Aberdeen",
+      "role": "destination"
+    }
+  ],
+  "direction": "outgoing",
+  "last_updated": "2025-01-31T15:03:25.115655"
+}

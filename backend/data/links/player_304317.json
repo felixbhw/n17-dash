@@ -1,0 +1,23 @@
+{
+  "player_id": 304317,
+  "canonical_name": "Tyler Dibling",
+  "transfer_status": "developing",
+  "timeline": [
+    {
+      "event_type": "negotiation",
+      "details": "Tottenham in concrete talks with Tyler Dibling\u2019s management",
+      "confidence": 75,
+      "date": "2025-01-31T14:54:21.834775",
+      "news_ids": [
+        "r-202501311454-1i8ve31"
+      ]
+    }
+  ],
+  "related_clubs": [
+    {
+      "name": "Tottenham",
+      "role": "interested"
+    }
+  ],
+  "direction": "incoming"
+}

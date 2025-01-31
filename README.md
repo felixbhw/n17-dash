@@ -1,176 +1,189 @@
 # N17 Dashboard
 
-A lightweight dashboard system for tracking Tottenham Hotspur squad information using API-Football data.
+Advanced dashboard system for tracking Tottenham Hotspur transfers and news with AI analysis.
 
 ## System Overview
 
 ### Data Sources
-- API-Football for squad and player statistics
-- Future expansion planned for:
-  - Club website RSS feed for official announcements
-  - News monitoring (r/coys, Twitter)
-  - AI-powered news analysis
+- **Reddit Integration** (r/coys)
+- **News Monitoring** with AI processing
+- **Transfer Timeline Tracking**
+- **Player Link Analysis**
+- API-Football integration (base player data)
 
 ### Current Features
-1. **Squad Information**
-   - Basic player details (name, position, number)
-   - Player statistics for current season
-   - Player photos and metadata
+1. **Real-time Monitoring**
+   - Reddit post monitoring (2 minute intervals)
+   - News article processing with LLM
+   - Transfer rumor confidence scoring
 
-2. **Data Storage**
-   - Simple JSON file structure
-   - No database required
-   - Easy to backup and version control
+2. **Core Functionality**
+   - Historical data fetching (last 7-30 days)
+   - Automated news classification (Tier 1-4 system)
+   - Player transfer timelines
+   - Club interest tracking
+   - News metadata preservation
 
-### File Structure
+3. **API Endpoints**
+   - Reddit historical data fetching
+   - Player statistics updates
+   - Transfer link management
+   - News reprocessing endpoints
+
+4. **Data Management**
+   - JSON storage with automatic backups
+   - Background task processing
+   - Error handling and retries
+   - Rate limiting protection
+
+### Enhanced File Structure
 ```
 n17-dash/
 ├── backend/
-│   ├── data/                  # JSON data storage
-│   │   ├── players/          # Individual player files
-│   │   ├── stats/           # Player statistics
-│   │   ├── matches/         # Match information (future)
-│   │   └── injuries/        # Injury records (future)
-│   ├── football_api.py      # API-Football client
-│   ├── initial_sync.py      # Data sync script
+│   ├── app/
+│   │   ├── services/
+│   │   │   ├── reddit_service.py
+│   │   │   ├── llm_service.py
+│   │   │   └── football_api.py
+│   │   ├── routers/
+│   │   │   ├── api.py
+│   │   │   └── views.py
+│   │   ├── background.py
+│   │   └── main.py
+│   ├── data/
+│   │   ├── news/            # Processed news articles
+│   │   ├── links/           # Player transfer links
+│   │   ├── processed_news.json
+│   │   └── players/         # Base player info
 │   ├── requirements.txt
-│   └── venv/               # Python virtual environment
-├── frontend/              # (Coming soon)
-│   ├── static/           
-│   │   ├── css/
-│   │   └── js/
-│   └── templates/
-└── .env                  # API keys and configuration
+│   └── venv/
+├── tests/
+│   └── test_reddit.py
+└── .env
 ```
 
-### Data Structure
+## Key Data Structures
 
-#### Player Data (`data/players/[player_id].json`)
+### Player Transfer File (`data/links/player_[id].json`)
 ```json
 {
-    "id": 123,
-    "name": "Player Name",
-    "firstname": "Player",
-    "lastname": "Name",
-    "age": 25,
-    "number": 10,
-    "position": "Forward",
-    "photo": "https://...",
-    "last_updated": "2024-01-30T14:47:35.142956"
+  "player_id": 270510,
+  "canonical_name": "Mathys Tel",
+  "transfer_status": "developing",
+  "timeline": [
+    {
+      "event_type": "meeting",
+      "details": "Tottenham presented project...",
+      "confidence": 85,
+      "date": "2025-01-30T22:08:15.294701",
+      "news_ids": ["r-202501302208-1ie1y6t"]
+    }
+  ],
+  "related_clubs": [
+    {"name": "Tottenham", "role": "interested"}
+  ],
+  "direction": "incoming",
+  "last_updated": "2025-01-31T12:41:29.558994"
 }
 ```
 
-#### Player Statistics (`data/stats/player_[id].json`)
+### News Article (`data/news/r-[id].json`)
 ```json
 {
-    "player": {
-        "id": 123,
-        "name": "Player Name",
-        "nationality": "England",
-        "height": "180 cm",
-        "weight": "75 kg"
-    },
-    "statistics": [
-        {
-            "team": { "id": 47, "name": "Tottenham" },
-            "league": { "id": 39, "name": "Premier League" },
-            "games": {
-                "appearences": 20,
-                "lineups": 18,
-                "minutes": 1620
-            },
-            "goals": {
-                "total": 10,
-                "assists": 5
-            }
-        }
-    ]
+  "id": "r-202501311139-1ieirhu",
+  "source": "reddit",
+  "reddit_id": "1ieirhu",
+  "timestamp": "2025-01-31T11:39:17.728629",
+  "title": "Tottenham boss Daniel Levy meeting with Mathys Tel...",
+  "content": "",
+  "url": "https://i.redd.it/n2y4poakwcge1.jpeg",
+  "tier": 2,
+  "metadata": {
+    "flair": "Transfer News: Tier 2",
+    "saved_at": "2025-01-31T11:39:17.728637"
+  }
 }
 ```
 
-## Setup and Usage
+## System Setup
 
-1. **Environment Setup**
-   ```bash
-   cd backend
-   python -m venv venv
-   source venv/bin/activate  # or venv\Scripts\activate on Windows
-   pip install -r requirements.txt
-   ```
+1. **Environment Configuration**
+```bash
+cd backend
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
 
-2. **Configuration**
-   - Create `.env` file in root directory
-   - Add your API-Football key:
-     ```
-     API_FOOTBALL_KEY=your_key_here
-     ```
+2. **API Credentials (`.env`)**
+```
+REDDIT_CLIENT_ID=your_reddit_id
+REDDIT_CLIENT_SECRET=your_reddit_secret
+API_FOOTBALL_KEY=your_football_api_key
+LLM_API_KEY=your_llm_provider_key
+```
 
-3. **Initial Data Sync**
-   ```bash
-   cd backend
-   python initial_sync.py
-   ```
+3. **Service Management**
+```bash
+# Start main service
+uvicorn app.main:app --host 0.0.0.0 --port 8000
+
+# Start background workers
+python -m app.background
+```
 
 ## Development Roadmap
 
-### Phase 1: Core Features ✓
-- [x] API-Football integration
-- [x] JSON data storage
-- [x] Basic squad information
-- [x] Player statistics
+### Phase 1: Core Infrastructure ✓
+- [x] Reddit integration
+- [x] News processing pipeline
+- [x] Transfer timeline tracking
+- [x] Confidence scoring system
 
-### Phase 2: Frontend (In Progress)
-- [ ] Simple web interface
-- [ ] Squad list view
-- [ ] Player detail pages
-- [ ] Statistics visualization
+### Phase 2: Enhanced Features (Current)
+- [ ] Twitter/X integration
+- [ ] Transfer impact predictions
+- [ ] Club negotiation simulations
+- [ ] Deal success probability models
 
-### Phase 3: Enhanced Features
-- [ ] Match data integration
-- [ ] Injury tracking
-- [ ] News monitoring
-- [ ] Transfer rumors
+### Phase 3: Advanced Analytics
+- [ ] Player value estimation
+- [ ] Contract analysis
+- [ ] Wage structure modeling
+- [ ] FFP compliance checks
 
-### Phase 4: AI Integration
-- [ ] News classification
-- [ ] Transfer reliability scoring
-- [ ] Performance prediction
-- [ ] Automated reports
+### Phase 4: Visualization
+- [ ] Interactive timeline maps
+- [ ] Deal negotiation flows
+- [ ] Media sentiment analysis
+- [ ] Real-time dashboards
 
-## Contributing
+## Monitoring & Maintenance
 
-1. Fork the repository
-2. Create your feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
+```bash
+# Check service status
+journalctl -u n17-dash.service -f
+
+# Reprocess unlinked news
+curl -X POST http://localhost:8000/api/news/reprocess-unlinked
+
+# Force historical fetch (7 days)
+curl -X POST http://localhost:8000/api/reddit/fetch-historical?days=7
+```
 
 ## Technical Notes
 
-### API Rate Limits
-- Free tier: Limited requests per day
-- Pro tier: Higher limits, current season access
+- **Rate Limits**
+  - Reddit API: 60 requests/minute
+  - LLM Provider: Check service-specific limits
+  - API-Football: 100 calls/day (free tier)
 
-### Data Updates
-- Squad data updates daily
-- Statistics update after matches
-- Manual sync available via `initial_sync.py`
+- **Data Retention**
+  - News articles: Permanent storage
+  - Player links: Updated every 15 minutes
+  - Processed IDs: Maintained indefinitely
 
-### Future Improvements
-1. **Automated Updates**
-   - Scheduled data syncs
-   - WebSocket updates for live data
-
-2. **Data Validation**
-   - JSON schema validation
-   - Data consistency checks
-
-3. **Frontend Features**
-   - Interactive statistics
-   - Player comparison tools
-   - Performance trends
-
-4. **Data Analysis**
-   - Performance metrics
-   - Team statistics
-   - Historical comparisons
+- **Background Workers**
+  - Reddit monitoring: 2 minute intervals
+  - News processing: 1 minute intervals
+  - Stats updates: Daily at 03:00 UTC

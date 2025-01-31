@@ -1,7 +1,7 @@
 {
   "player_id": 162552,
   "canonical_name": "Dane Scarlett",
-  "transfer_status": "developing",
+  "transfer_status": "archived",
   "timeline": [
     {
       "event_type": "loan",
@@ -35,5 +35,6 @@
       "role": "interested"
     }
   ],
-  "direction": "outgoing"
+  "direction": "outgoing",
+  "last_updated": "2025-01-31T12:41:49.603147"
 }

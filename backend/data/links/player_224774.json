@@ -1,0 +1,28 @@
+{
+  "player_id": 224774,
+  "canonical_name": "Kyle Walker",
+  "transfer_status": "archived",
+  "timeline": [
+    {
+      "event_type": "loan agreement",
+      "details": "Kyle Walker has reached an agreement to join AC Milan on loan with an option to buy.",
+      "confidence": 80,
+      "date": "2025-01-31T14:58:41.663376",
+      "news_ids": [
+        "r-202501311458-1i7floh"
+      ]
+    }
+  ],
+  "related_clubs": [
+    {
+      "name": "AC Milan",
+      "role": "destination"
+    },
+    {
+      "name": "Manchester City",
+      "role": "current"
+    }
+  ],
+  "direction": "outgoing",
+  "last_updated": "2025-01-31T15:05:02.435325"
+}
