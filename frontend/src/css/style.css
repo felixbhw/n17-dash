@@ -179,3 +179,95 @@ a:hover {
         margin-bottom: 0;
     }
 }
+
+/* Custom styles to enhance Bootstrap */
+
+/* Navbar customization */
+.navbar-brand {
+    font-weight: 600;
+    font-size: 1.5rem;
+}
+
+/* Card customization */
+.player-card {
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.player-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.player-photo {
+    height: 200px;
+    background-position: center;
+    background-size: cover;
+    background-color: #f8f9fa;
+}
+
+/* Table customization */
+.table th {
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+}
+
+/* Status badges */
+.status-badge {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 50rem;
+}
+
+/* Custom colors */
+.bg-spurs-navy {
+    background-color: #132257;
+}
+
+.bg-spurs-blue {
+    background-color: #1c3c85;
+}
+
+/* Stats card */
+.stats-card {
+    border-radius: 0.5rem;
+    border: 1px solid rgba(0,0,0,.125);
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.stats-value {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #132257;
+}
+
+.stats-label {
+    font-size: 0.875rem;
+    color: #6c757d;
+    text-transform: uppercase;
+}
+
+/* DataTables customization */
+.dataTables_wrapper .dataTables_paginate .paginate_button.current {
+    background: #132257 !important;
+    color: white !important;
+    border: none;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+    background: #1c3c85 !important;
+    color: white !important;
+    border: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .player-photo {
+        height: 150px;
+    }
+    
+    .stats-card {
+        margin-bottom: 0.5rem;
+    }
+}

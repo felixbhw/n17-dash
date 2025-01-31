@@ -4,106 +4,110 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>N17 Dashboard - Tottenham Squad</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/static/css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+    <link href="/static/css/style.css" rel="stylesheet">
+    <style>
+        #squad-grid {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        #squad-table {
+            display: none;
+        }
+    </style>
 </head>
-<body class="bg-gray-100">
-    <nav class="bg-white shadow-lg">
-        <div class="max-w-7xl mx-auto px-4">
-            <div class="flex justify-between h-16">
-                <div class="flex">
-                    <div class="flex-shrink-0 flex items-center">
-                        <h1 class="text-2xl font-bold text-blue-900">N17 Dashboard</h1>
-                    </div>
-                    <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
-                        <a href="/" class="border-blue-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-                            Squad
-                        </a>
-                        <a href="/links" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-                            Transfer Links
-                        </a>
-                    </div>
-                </div>
-                <!-- Mobile menu button -->
-                <div class="flex items-center sm:hidden">
-                    <button type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500" aria-controls="mobile-menu" aria-expanded="false">
-                        <span class="sr-only">Open main menu</span>
-                        <!-- Menu icon -->
-                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                        </svg>
-                    </button>
-                </div>
-            </div>
-        </div>
-        <!-- Mobile menu -->
-        <div class="sm:hidden" id="mobile-menu">
-            <div class="pt-2 pb-3 space-y-1">
-                <a href="/" class="bg-blue-50 border-blue-500 text-blue-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Squad</a>
-                <a href="/links" class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Transfer Links</a>
+<body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-spurs-navy">
+        <div class="container">
+            <a class="navbar-brand" href="/">N17 Dashboard</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/">Squad</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/links">Transfer Links</a>
+                    </li>
+                </ul>
             </div>
         </div>
     </nav>
 
-    <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        <div class="px-4 py-6 sm:px-0">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-3xl font-bold text-gray-900">Squad Overview</h2>
-                <div class="flex space-x-4">
-                    <a href="/links" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
-                        Transfer Links
-                    </a>
-                    <button id="toggle-view" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                        Switch to Table View
-                    </button>
+    <main class="container py-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="h2">Squad Overview</h2>
+            <div class="d-flex gap-2">
+                <a href="/links" class="btn btn-success">
+                    Transfer Links
+                </a>
+                <button id="toggle-view" class="btn btn-primary">
+                    Switch to Table View
+                </button>
+            </div>
+        </div>
+
+        <div id="squad-grid" class="row g-4">
+            <!-- Squad cards will be dynamically inserted here -->
+        </div>
+
+        <div id="squad-table">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped" id="squadTable">
+                            <thead>
+                                <tr>
+                                    <th>Number</th>
+                                    <th>Name</th>
+                                    <th>Position</th>
+                                    <th>Age</th>
+                                    <th>Details</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-body">
+                                <!-- Table rows will be dynamically inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-            </div>
-            <div id="squad-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                <!-- Squad cards will be dynamically inserted here -->
-            </div>
-            <div id="squad-table" class="hidden overflow-x-auto rounded-lg shadow">
-                <table class="min-w-full divide-y divide-gray-200 bg-white">
-                    <thead class="bg-gray-50">
-                        <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Number</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Position</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Age</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Details</th>
-                        </tr>
-                    </thead>
-                    <tbody id="table-body" class="divide-y divide-gray-200">
-                        <!-- Table rows will be dynamically inserted here -->
-                    </tbody>
-                </table>
             </div>
         </div>
     </main>
 
     <template id="player-card-template">
-        <div class="bg-white overflow-hidden shadow rounded-lg hover:shadow-xl transition-shadow duration-300">
-            <div class="player-photo w-full h-48 bg-gray-200 bg-center bg-cover"></div>
-            <div class="px-4 py-4">
-                <h3 class="player-name text-lg font-semibold text-gray-900"></h3>
-                <div class="mt-2 grid grid-cols-2 gap-2 text-sm text-gray-600">
-                    <div>
-                        <span class="font-medium">Number:</span>
-                        <span class="player-number"></span>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <div class="card player-card h-100">
+                <div class="player-photo card-img-top"></div>
+                <div class="card-body">
+                    <h5 class="card-title player-name mb-3"></h5>
+                    <div class="row g-2 mb-3">
+                        <div class="col-6">
+                            <small class="text-muted">Number</small>
+                            <div class="player-number"></div>
+                        </div>
+                        <div class="col-6">
+                            <small class="text-muted">Position</small>
+                            <div class="player-position"></div>
+                        </div>
+                        <div class="col-6">
+                            <small class="text-muted">Age</small>
+                            <div class="player-age"></div>
+                        </div>
                     </div>
-                    <div>
-                        <span class="font-medium">Position:</span>
-                        <span class="player-position"></span>
-                    </div>
-                    <div>
-                        <span class="font-medium">Age:</span>
-                        <span class="player-age"></span>
-                    </div>
+                    <a href="#" class="player-link btn btn-outline-primary btn-sm">View Details →</a>
                 </div>
-                <a href="#" class="player-link mt-4 inline-block text-blue-600 hover:text-blue-800">View Details →</a>
             </div>
         </div>
     </template>
 
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
     <script src="/static/js/squad.js"></script>
 </body>
 </html>

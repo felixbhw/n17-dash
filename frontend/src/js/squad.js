@@ -1,97 +1,97 @@
 document.addEventListener('DOMContentLoaded', async () => {
     try {
         const squadGrid = document.getElementById('squad-grid');
+        const squadTable = document.getElementById('squad-table');
         const tableBody = document.getElementById('table-body');
         const toggleButton = document.getElementById('toggle-view');
         const template = document.getElementById('player-card-template');
 
-        // Debug: Log initial element references
-        console.log('Initial elements:', {
-            squadGrid,
-            tableBody,
-            toggleButton,
-            template,
-            squadTable: document.getElementById('squad-table')
-        });
-
         let isTableView = false;
-
-        // Move toggle button handler before fetch to ensure it's always set up
-        toggleButton.addEventListener('click', () => {
-            console.log('Toggle button clicked. Current view:', isTableView ? 'Table' : 'Grid');
-            isTableView = !isTableView;
-            
-            // Debug: Log elements before toggling
-            console.log('Elements before toggle:', {
-                squadGrid: squadGrid.classList.contains('hidden'),
-                squadTable: document.getElementById('squad-table').classList.contains('hidden')
-            });
-            
-            squadGrid.classList.toggle('hidden', isTableView);
-            document.getElementById('squad-table').classList.toggle('hidden', !isTableView);
-            
-            // Debug: Log elements after toggling
-            console.log('Elements after toggle:', {
-                squadGrid: squadGrid.classList.contains('hidden'),
-                squadTable: document.getElementById('squad-table').classList.contains('hidden')
-            });
-            
-            toggleButton.textContent = isTableView ? 'Switch to Grid View' : 'Switch to Table View';
-        });
+        let dataTable = null;
 
         // Fetch all player files from the data directory
         const response = await fetch('/api/squad');
         const allPlayers = await response.json();
 
-        // Filter to only include squad players and sort by number
-        const players = allPlayers
-            .filter(player => player.is_squad_player !== false)  // Keep undefined (legacy) or true
-            .sort((a, b) => (a.number || 99) - (b.number || 99));
+        // Sort by number
+        const players = allPlayers.sort((a, b) => (a.number || 99) - (b.number || 99));
 
-        // Populate both grid and table
+        // Populate grid view
         players.forEach(player => {
-            // Grid View Card
             const card = template.content.cloneNode(true);
             card.querySelector('.player-photo').style.backgroundImage = `url(${player.photo})`;
             card.querySelector('.player-name').textContent = player.name;
             card.querySelector('.player-number').textContent = player.number || 'N/A';
             card.querySelector('.player-position').textContent = player.position;
             card.querySelector('.player-age').textContent = player.age;
-            card.querySelector('.player-link').href = `/player/${player.id}`;
+            card.querySelector('.player-link').href = `/player/${player.id}/stats`;
             squadGrid.appendChild(card);
 
-            // Table View Row
+            // Create table row
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${player.number || 'N/A'}</td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                    <div class="flex items-center">
-                        <div class="flex-shrink-0 h-10 w-10">
-                            <div class="player-photo h-10 w-10 rounded-full bg-gray-200 bg-cover bg-center" 
-                                 style="background-image: url('${player.photo}')"></div>
+                <td>${player.number || 'N/A'}</td>
+                <td>
+                    <div class="d-flex align-items-center">
+                        <div class="me-3" style="width: 40px; height: 40px;">
+                            <div class="rounded-circle bg-light" 
+                                 style="width: 100%; height: 100%; background-image: url('${player.photo}'); background-size: cover; background-position: center;"></div>
                         </div>
-                        <div class="ml-4">
-                            <div class="text-sm font-medium text-gray-900">${player.name}</div>
-                        </div>
+                        <div>${player.name}</div>
                     </div>
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${player.position}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${player.age}</td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                    <a href="/player/${player.id}" class="text-blue-600 hover:text-blue-900">View Details</a>
+                <td>${player.position}</td>
+                <td>${player.age}</td>
+                <td>
+                    <a href="/player/${player.id}/stats" class="btn btn-sm btn-outline-primary">View Stats</a>
                 </td>
             `;
             tableBody.appendChild(row);
         });
+
+        // Initialize DataTable
+        dataTable = new DataTable('#squadTable', {
+            paging: true,
+            ordering: true,
+            info: true,
+            pageLength: 25,
+            order: [[0, 'asc']],
+            language: {
+                search: "Search squad:",
+                lengthMenu: "Show _MENU_ players",
+                info: "Showing _START_ to _END_ of _TOTAL_ players",
+                infoEmpty: "No players found",
+                infoFiltered: "(filtered from _MAX_ total players)"
+            }
+        });
+
+        // Toggle view handler
+        toggleButton.addEventListener('click', () => {
+            isTableView = !isTableView;
+            
+            if (isTableView) {
+                squadGrid.style.display = 'none';
+                squadTable.style.display = 'block';
+                toggleButton.textContent = 'Switch to Grid View';
+                if (dataTable) {
+                    dataTable.columns.adjust();
+                }
+            } else {
+                squadGrid.style.display = 'flex';
+                squadTable.style.display = 'none';
+                toggleButton.textContent = 'Switch to Table View';
+            }
+        });
+
     } catch (error) {
         console.error('Error loading squad data:', error);
         const errorMessage = `
-            <div class="col-span-full text-center text-red-600 py-8">
+            <div class="alert alert-danger text-center m-4">
                 Error loading squad data. Please try again later.
             </div>
         `;
         squadGrid.innerHTML = errorMessage;
-        document.getElementById('squad-table').innerHTML = errorMessage;
+        squadTable.innerHTML = errorMessage;
     }
 });
 

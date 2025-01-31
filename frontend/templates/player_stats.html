@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>N17 Dashboard - Player Stats</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/style.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">N17 Dashboard</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Squad</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/links">Transfer Links</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid py-4">
+        <!-- Player Header -->
+        <div class="row mb-4">
+            <div class="col-md-2">
+                <img src="{{ player.photo }}" alt="{{ player.name }}" class="img-fluid rounded shadow">
+            </div>
+            <div class="col-md-10">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h2>{{ player.name }}</h2>
+                                <p class="text-muted mb-1">{{ player.firstname }} {{ player.lastname }}</p>
+                                <p class="mb-1">
+                                    <span class="badge bg-primary">{{ statistics[0].games.position }}</span>
+                                    <img src="{{ statistics[0].team.logo }}" alt="{{ statistics[0].team.name }}" height="24" class="ms-2">
+                                    {{ statistics[0].team.name }}
+                                </p>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-6 col-md-4">
+                                        <small class="text-muted">Age</small>
+                                        <p class="mb-1">{{ player.age }}</p>
+                                    </div>
+                                    <div class="col-6 col-md-4">
+                                        <small class="text-muted">Height</small>
+                                        <p class="mb-1">{{ player.height }}</p>
+                                    </div>
+                                    <div class="col-6 col-md-4">
+                                        <small class="text-muted">Weight</small>
+                                        <p class="mb-1">{{ player.weight }}</p>
+                                    </div>
+                                    <div class="col-6 col-md-4">
+                                        <small class="text-muted">Nationality</small>
+                                        <p class="mb-1">{{ player.nationality }}</p>
+                                    </div>
+                                    <div class="col-12 col-md-8">
+                                        <small class="text-muted">Birth</small>
+                                        <p class="mb-1">{{ player.birth.date }} ({{ player.birth.place }}, {{ player.birth.country }})</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Season Stats -->
+        {% for stat in statistics %}
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <div>
+                    <img src="{{ stat.league.logo }}" alt="{{ stat.league.name }}" height="24" class="me-2">
+                    {{ stat.league.name }} {{ stat.league.season }}/{{ stat.league.season + 1 }}
+                </div>
+                <div>
+                    <img src="{{ stat.team.logo }}" alt="{{ stat.team.name }}" height="24" class="me-2">
+                    {{ stat.team.name }}
+                </div>
+            </div>
+            <div class="card-body">
+                <!-- Overview Stats -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <h5 class="card-title">Overview</h5>
+                        <div class="row g-3">
+                            <div class="col-6 col-md-2">
+                                <div class="card bg-light">
+                                    <div class="card-body text-center">
+                                        <h3 class="mb-0">{{ stat.games.appearences }}</h3>
+                                        <small class="text-muted">Appearances</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-2">
+                                <div class="card bg-light">
+                                    <div class="card-body text-center">
+                                        <h3 class="mb-0">{{ stat.games.minutes }}</h3>
+                                        <small class="text-muted">Minutes</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-2">
+                                <div class="card bg-light">
+                                    <div class="card-body text-center">
+                                        <h3 class="mb-0">{{ stat.goals.total }}</h3>
+                                        <small class="text-muted">Goals</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-2">
+                                <div class="card bg-light">
+                                    <div class="card-body text-center">
+                                        <h3 class="mb-0">{{ stat.goals.assists }}</h3>
+                                        <small class="text-muted">Assists</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-2">
+                                <div class="card bg-light">
+                                    <div class="card-body text-center">
+                                        <h3 class="mb-0">{{ stat.games.rating|default('N/A') }}</h3>
+                                        <small class="text-muted">Rating</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detailed Stats -->
+                <div class="row">
+                    <!-- Games -->
+                    <div class="col-md-4 mb-4">
+                        <h5 class="card-title">Games</h5>
+                        <table class="table table-sm">
+                            <tr>
+                                <td>Appearances</td>
+                                <td class="text-end">{{ stat.games.appearences }}</td>
+                            </tr>
+                            <tr>
+                                <td>Lineups</td>
+                                <td class="text-end">{{ stat.games.lineups }}</td>
+                            </tr>
+                            <tr>
+                                <td>Minutes</td>
+                                <td class="text-end">{{ stat.games.minutes }}</td>
+                            </tr>
+                            <tr>
+                                <td>Rating</td>
+                                <td class="text-end">{{ stat.games.rating|default('N/A') }}</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- Substitutes -->
+                    <div class="col-md-4 mb-4">
+                        <h5 class="card-title">Substitutes</h5>
+                        <table class="table table-sm">
+                            <tr>
+                                <td>In</td>
+                                <td class="text-end">{{ stat.substitutes.in }}</td>
+                            </tr>
+                            <tr>
+                                <td>Out</td>
+                                <td class="text-end">{{ stat.substitutes.out }}</td>
+                            </tr>
+                            <tr>
+                                <td>Bench</td>
+                                <td class="text-end">{{ stat.substitutes.bench }}</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- Goals -->
+                    <div class="col-md-4 mb-4">
+                        <h5 class="card-title">Goals</h5>
+                        <table class="table table-sm">
+                            <tr>
+                                <td>Total</td>
+                                <td class="text-end">{{ stat.goals.total }}</td>
+                            </tr>
+                            <tr>
+                                <td>Assists</td>
+                                <td class="text-end">{{ stat.goals.assists }}</td>
+                            </tr>
+                            {% if stat.games.position == 'Goalkeeper' %}
+                            <tr>
+                                <td>Conceded</td>
+                                <td class="text-end">{{ stat.goals.conceded }}</td>
+                            </tr>
+                            <tr>
+                                <td>Saves</td>
+                                <td class="text-end">{{ stat.goals.saves }}</td>
+                            </tr>
+                            {% endif %}
+                        </table>
+                    </div>
+
+                    <!-- Shots -->
+                    {% if stat.games.position != 'Goalkeeper' %}
+                    <div class="col-md-4 mb-4">
+                        <h5 class="card-title">Shots</h5>
+                        <table class="table table-sm">
+                            <tr>
+                                <td>Total</td>
+                                <td class="text-end">{{ stat.shots.total }}</td>
+                            </tr>
+                            <tr>
+                                <td>On Target</td>
+                                <td class="text-end">{{ stat.shots.on }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    {% endif %}
+
+                    <!-- Passes -->
+                    <div class="col-md-4 mb-4">
+                        <h5 class="card-title">Passes</h5>
+                        <table class="table table-sm">
+                            <tr>
+                                <td>Total</td>
+                                <td class="text-end">{{ stat.passes.total }}</td>
+                            </tr>
+                            <tr>
+                                <td>Key</td>
+                                <td class="text-end">{{ stat.passes.key }}</td>
+                            </tr>
+                            <tr>
+                                <td>Accuracy</td>
+                                <td class="text-end">{{ stat.passes.accuracy }}%</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- Tackles -->
+                    <div class="col-md-4 mb-4">
+                        <h5 class="card-title">Tackles</h5>
+                        <table class="table table-sm">
+                            <tr>
+                                <td>Total</td>
+                                <td class="text-end">{{ stat.tackles.total }}</td>
+                            </tr>
+                            <tr>
+                                <td>Blocks</td>
+                                <td class="text-end">{{ stat.tackles.blocks }}</td>
+                            </tr>
+                            <tr>
+                                <td>Interceptions</td>
+                                <td class="text-end">{{ stat.tackles.interceptions }}</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- Duels -->
+                    <div class="col-md-4 mb-4">
+                        <h5 class="card-title">Duels</h5>
+                        <table class="table table-sm">
+                            <tr>
+                                <td>Total</td>
+                                <td class="text-end">{{ stat.duels.total }}</td>
+                            </tr>
+                            <tr>
+                                <td>Won</td>
+                                <td class="text-end">{{ stat.duels.won }}</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- Fouls -->
+                    <div class="col-md-4 mb-4">
+                        <h5 class="card-title">Fouls</h5>
+                        <table class="table table-sm">
+                            <tr>
+                                <td>Drawn</td>
+                                <td class="text-end">{{ stat.fouls.drawn }}</td>
+                            </tr>
+                            <tr>
+                                <td>Committed</td>
+                                <td class="text-end">{{ stat.fouls.committed }}</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- Cards -->
+                    <div class="col-md-4 mb-4">
+                        <h5 class="card-title">Cards</h5>
+                        <table class="table table-sm">
+                            <tr>
+                                <td>Yellow</td>
+                                <td class="text-end">
+                                    <span class="badge bg-warning text-dark">{{ stat.cards.yellow }}</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Red</td>
+                                <td class="text-end">
+                                    <span class="badge bg-danger">{{ stat.cards.red }}</span>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- Penalties -->
+                    <div class="col-md-4 mb-4">
+                        <h5 class="card-title">Penalties</h5>
+                        <table class="table table-sm">
+                            <tr>
+                                <td>Scored</td>
+                                <td class="text-end">{{ stat.penalty.scored }}</td>
+                            </tr>
+                            <tr>
+                                <td>Missed</td>
+                                <td class="text-end">{{ stat.penalty.missed }}</td>
+                            </tr>
+                            {% if stat.games.position == 'Goalkeeper' %}
+                            <tr>
+                                <td>Saved</td>
+                                <td class="text-end">{{ stat.penalty.saved }}</td>
+                            </tr>
+                            {% endif %}
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 
