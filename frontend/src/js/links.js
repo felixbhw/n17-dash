@@ -1,154 +1,332 @@
-// Initialize DataTables when document is ready
-$(document).ready(function() {
-    // Initialize player links table
-    const playerLinksTable = $('#playerLinksTable').DataTable({
-        order: [[6, 'desc']], // Sort by last updated by default
-        pageLength: 25,
+// Initialize DataTables
+let playerLinksTable;
+let timelineTable;
+let editingPlayer = null;
+
+function formatDate(dateString) {
+    return moment(dateString).fromNow();
+}
+
+function getBadgeHtml(type, value) {
+    if (!value) return '';
+    const badgeClasses = {
+        status: {
+            'hearsay': 'bg-secondary',
+            'rumors': 'bg-info',
+            'developing': 'bg-warning',
+            'here we go!': 'bg-success',
+            'archived': 'bg-dark'
+        },
+        direction: {
+            'incoming': 'bg-success',
+            'outgoing': 'bg-danger'
+        }
+    };
+    
+    const badgeClass = badgeClasses[type][value.toLowerCase()] || 'bg-secondary';
+    return `<span class="badge ${badgeClass}">${value}</span>`;
+}
+
+function formatClubs(clubs) {
+    if (!clubs || !clubs.length) return '';
+    
+    return clubs.map(club => {
+        const roleClass = {
+            'current': 'bg-primary',
+            'destination': 'bg-success',
+            'interested': 'bg-info'
+        }[club.role] || 'bg-secondary';
+        
+        return `<div class="mb-1">
+            <span class="badge ${roleClass}">${club.name}</span>
+        </div>`;
+    }).join('');
+}
+
+function initTables() {
+    playerLinksTable = $('#playerLinksTable').DataTable({
+        ajax: {
+            url: '/api/links/players',
+            dataSrc: ''
+        },
         columns: [
-            { // Player
-                data: 'name',
+            { 
+                data: 'canonical_name',
                 render: function(data, type, row) {
-                    if (type === 'display') {
-                        return `<a href="/player/${row.id}">${data}</a>`;
-                    }
-                    return data;
+                    return `<a href="#" class="player-link" data-player-id="${row.player_id}">${data}</a>`;
                 }
             },
-            { // Current Club
-                data: 'current_club',
-                defaultContent: '-'
+            { 
+                data: 'transfer_status',
+                render: function(data) {
+                    return getBadgeHtml('status', data);
+                }
             },
-            { // Direction
+            { 
                 data: 'direction',
-                render: function(data, type, row) {
-                    if (type === 'display') {
-                        if (data === 'incoming') {
-                            return '<span class="badge bg-success">Incoming</span>';
-                        } else if (data === 'outgoing') {
-                            return '<span class="badge bg-danger">Outgoing</span>';
-                        }
-                        return '-';
-                    }
-                    return data;
+                render: function(data) {
+                    return getBadgeHtml('direction', data);
                 }
             },
-            { // Type
-                data: 'transfer_type',
-                render: function(data, type, row) {
-                    if (type === 'display') {
-                        switch(data) {
-                            case 'transfer':
-                                return '<span class="badge bg-primary">Transfer</span>';
-                            case 'loan':
-                                return '<span class="badge bg-info">Loan</span>';
-                            case 'loan_with_option':
-                                return '<span class="badge bg-warning">Loan + Option</span>';
-                            case 'loan_with_obligation':
-                                return '<span class="badge bg-warning">Loan + Obligation</span>';
-                            default:
-                                return '<span class="badge bg-secondary">Unclear</span>';
-                        }
-                    }
-                    return data;
+            { 
+                data: 'timeline',
+                render: function(data) {
+                    if (!data || !data.length) return 'No events';
+                    return data[data.length - 1].details;
                 }
             },
-            { // Latest Price
-                data: 'latest_price',
-                render: function(data, type, row) {
-                    if (!data || !data.amount) return '-';
-                    return `${data.amount.toLocaleString()} ${data.currency}`;
-                }
+            { 
+                data: 'related_clubs',
+                render: formatClubs
             },
-            { // Links Count
-                data: 'links_count',
-                render: function(data, type, row) {
-                    if (type === 'display') {
-                        return `<span class="badge bg-primary">${data}</span>`;
-                    }
-                    return data;
-                }
-            },
-            { // Last Updated
+            { 
                 data: 'last_updated',
+                render: formatDate
+            },
+            {
+                data: null,
+                orderable: false,
+                className: 'text-center',
                 render: function(data, type, row) {
                     if (type === 'display') {
-                        return new Date(data).toLocaleString();
+                        return `
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-sm btn-primary edit-player" data-player-id="${row.player_id}">
+                                    <i class="fas fa-edit"></i> Edit
+                                </button>
+                                <button type="button" class="btn btn-sm btn-success add-event" data-player-id="${row.player_id}">
+                                    <i class="fas fa-plus"></i> Add
+                                </button>
+                            </div>
+                        `;
                     }
-                    return data;
+                    return '';
                 }
             }
-        ]
+        ],
+        order: [[5, 'desc']]
     });
 
-    // Initialize events table
-    const eventsTable = $('#eventsTable').DataTable({
-        order: [[0, 'desc']], // Sort by date descending
-        pageLength: 10,
+    timelineTable = $('#timelineTable').DataTable({
+        ajax: {
+            url: '/api/links/events',
+            dataSrc: ''
+        },
         columns: [
-            { // Date
+            { 
                 data: 'date',
-                render: function(data, type, row) {
-                    if (type === 'display') {
-                        return new Date(data).toLocaleString();
-                    }
-                    return data;
-                }
+                render: formatDate
             },
-            { // Player
-                data: 'player_name',
-                render: function(data, type, row) {
-                    if (type === 'display' && row.player_id) {
-                        return `<a href="/player/${row.player_id}">${data}</a>`;
-                    }
-                    return data;
-                }
-            },
-            { // Event
+            { data: 'player_name' },
+            { 
                 data: 'event_type',
+                render: function(data) {
+                    return getBadgeHtml('status', data);
+                }
+            },
+            { 
+                data: 'details',
                 render: function(data, type, row) {
-                    if (type === 'display') {
-                        return `<span class="badge bg-info">${data}</span>`;
+                    if (type === 'display' && row.news_ids && row.news_ids.length > 0) {
+                        return `<a href="/news/${row.news_ids[0]}" class="text-decoration-none">
+                            ${data}
+                            <i class="fas fa-external-link-alt ms-1 small"></i>
+                        </a>`;
                     }
                     return data;
                 }
             },
-            { // Details
-                data: 'details'
+            { 
+                data: 'confidence',
+                render: function(data) {
+                    const confidence = parseInt(data) || 0;
+                    const badgeClass = confidence > 75 ? 'bg-success' : 
+                                     confidence > 50 ? 'bg-warning' : 
+                                     confidence > 25 ? 'bg-info' : 'bg-secondary';
+                    return `<span class="badge ${badgeClass}">${confidence}%</span>`;
+                }
             },
-            { // Source
-                data: 'source',
-                render: function(data, type, row) {
-                    if (type === 'display' && row.source_url) {
-                        return `<a href="${row.source_url}" target="_blank">${data}</a>`;
+            {
+                data: null,
+                orderable: false,
+                className: 'text-center',
+                render: function(data, type, row, meta) {
+                    if (type === 'display') {
+                        return `
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-sm btn-danger delete-event" 
+                                        data-player-id="${data.player_id}"
+                                        data-event-index="${meta.row}">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            </div>
+                        `;
                     }
-                    return data;
+                    return '';
                 }
             }
-        ]
+        ],
+        order: [[0, 'desc']]
     });
+}
 
-    // Function to fetch and update data
-    function updateTables() {
-        // Fetch player links data
-        fetch('/api/links/players')
-            .then(response => response.json())
-            .then(data => {
-                playerLinksTable.clear().rows.add(data).draw();
-            })
-            .catch(error => console.error('Error fetching player links:', error));
+function populateEditModal(playerId) {
+    editingPlayer = playerId;
+    
+    // Fetch player data
+    $.get(`/api/links/player/${playerId}`)
+        .done(function(data) {
+            $('#editPlayerId').val(playerId);
+            $('#editStatus').val(data.transfer_status || '');
+            $('#editDirection').val(data.direction || '');
+            
+            // Clear existing clubs
+            $('#editClubs').empty();
+            
+            // Add existing clubs
+            if (data.related_clubs && data.related_clubs.length) {
+                data.related_clubs.forEach(club => {
+                    addClubEntry(club.name, club.role);
+                });
+            }
+            
+            $('#editPlayerModal').modal('show');
+        })
+        .fail(function(jqXHR) {
+            alert('Error loading player data: ' + jqXHR.responseText);
+        });
+}
 
-        // Fetch events data
-        fetch('/api/links/events')
-            .then(response => response.json())
-            .then(data => {
-                eventsTable.clear().rows.add(data).draw();
-            })
-            .catch(error => console.error('Error fetching events:', error));
-    }
+function addClubEntry(name = '', role = 'interested') {
+    const template = document.getElementById('clubTemplate');
+    const clone = template.content.cloneNode(true);
+    
+    const clubEntry = clone.querySelector('.club-entry');
+    const nameInput = clone.querySelector('.club-name');
+    const roleSelect = clone.querySelector('.club-role');
+    
+    nameInput.value = name;
+    roleSelect.value = role;
+    
+    $('#editClubs').append(clubEntry);
+}
 
-    // Initial data load
-    updateTables();
+function savePlayerChanges() {
+    const playerId = editingPlayer;
+    if (!playerId) return;
+    
+    const clubs = [];
+    $('#editClubs .club-entry').each(function() {
+        const name = $(this).find('.club-name').val();
+        const role = $(this).find('.club-role').val();
+        if (name) {
+            clubs.push({ name, role });
+        }
+    });
+    
+    const data = {
+        transfer_status: $('#editStatus').val(),
+        direction: $('#editDirection').val(),
+        related_clubs: clubs
+    };
+    
+    $.ajax({
+        url: `/api/links/player/${playerId}`,
+        method: 'PUT',
+        contentType: 'application/json',
+        data: JSON.stringify(data)
+    })
+    .done(function() {
+        $('#editPlayerModal').modal('hide');
+        playerLinksTable.ajax.reload();
+        timelineTable.ajax.reload();
+    })
+    .fail(function(jqXHR) {
+        alert('Error saving changes: ' + jqXHR.responseText);
+    });
+}
 
-    // Refresh data every 5 minutes
-    setInterval(updateTables, 5 * 60 * 1000);
+function saveNewEvent() {
+    const playerId = $('#eventPlayerId').val();
+    if (!playerId) return;
+    
+    const newsId = $('#eventNewsId').val().trim();
+    const data = {
+        event_type: $('#eventType').val(),
+        details: $('#eventDetails').val(),
+        confidence: parseInt($('#eventConfidence').val()) || 50,
+        news_ids: newsId ? [newsId] : []
+    };
+    
+    $.ajax({
+        url: `/api/links/player/${playerId}/timeline`,
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(data)
+    })
+    .done(function() {
+        $('#addEventModal').modal('hide');
+        playerLinksTable.ajax.reload();
+        timelineTable.ajax.reload();
+    })
+    .fail(function(jqXHR) {
+        alert('Error adding event: ' + jqXHR.responseText);
+    });
+}
+
+function deleteEvent(playerId, eventIndex) {
+    if (!confirm('Are you sure you want to delete this event?')) return;
+    
+    $.ajax({
+        url: `/api/links/player/${playerId}/timeline/${eventIndex}`,
+        method: 'DELETE'
+    })
+    .done(function() {
+        playerLinksTable.ajax.reload();
+        timelineTable.ajax.reload();
+    })
+    .fail(function(jqXHR) {
+        alert('Error deleting event: ' + jqXHR.responseText);
+    });
+}
+
+$(document).ready(function() {
+    // Initialize DataTables
+    initTables();
+    
+    // Add Club button
+    $('#addClubBtn').click(function() {
+        addClubEntry();
+    });
+    
+    // Edit player button - Use event delegation for dynamically added elements
+    $(document).on('click', '.edit-player', function() {
+        const playerId = $(this).data('player-id');
+        populateEditModal(playerId);
+    });
+    
+    // Add event button - Use event delegation for dynamically added elements
+    $(document).on('click', '.add-event', function() {
+        const playerId = $(this).data('player-id');
+        $('#eventPlayerId').val(playerId);
+        $('#eventDetails').val('');
+        $('#eventConfidence').val(50);
+        $('#addEventModal').modal('show');
+    });
+    
+    // Delete event button - Use event delegation for dynamically added elements
+    $(document).on('click', '.delete-event', function() {
+        const playerId = $(this).data('player-id');
+        const eventIndex = $(this).data('event-index');
+        deleteEvent(playerId, eventIndex);
+    });
+    
+    // Save buttons
+    $('#savePlayerBtn').click(savePlayerChanges);
+    $('#saveEventBtn').click(saveNewEvent);
+    
+    // Remove club button - Use event delegation
+    $(document).on('click', '.remove-club', function() {
+        $(this).closest('.club-entry').remove();
+    });
 }); 

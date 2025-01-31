@@ -618,6 +618,58 @@ class SimpleFootballAPI:
         """
         return self._load_json('injuries', 'current.json') or {'injuries': []}
 
+    async def update_transfer_linked_players_stats(self):
+        """Fetch and update stats for all players that have transfer links"""
+        try:
+            links_dir = PROJECT_ROOT / 'backend' / 'data' / 'links'
+            stats_dir = PROJECT_ROOT / 'backend' / 'data' / 'stats'
+            stats_dir.mkdir(exist_ok=True)
+            
+            # Get all player IDs from transfer links
+            player_ids = set()
+            for player_file in links_dir.glob('player_*.json'):
+                try:
+                    with open(player_file) as f:
+                        player_data = json.load(f)
+                        if player_id := player_data.get('player_id'):
+                            player_ids.add(player_id)
+                except Exception as e:
+                    logger.error(f"Error reading player file {player_file}: {e}")
+                    continue
+
+            # Fetch stats for each player
+            for player_id in player_ids:
+                try:
+                    # Get player info
+                    response = await self._make_request("players", {
+                        "id": player_id,
+                        "season": CURRENT_SEASON
+                    })
+
+                    if not response.get('response'):
+                        logger.warning(f"No data found for player {player_id}")
+                        continue
+
+                    # Save player stats
+                    stats_file = stats_dir / f"player_{player_id}.json"
+                    with open(stats_file, 'w') as f:
+                        json.dump(response['response'][0], f, indent=2)
+                    
+                    logger.info(f"Updated stats for player {player_id}")
+                    
+                    # API rate limiting - sleep between requests
+                    await asyncio.sleep(3)
+                    
+                except Exception as e:
+                    logger.error(f"Error fetching stats for player {player_id}: {e}")
+                    continue
+                
+            return {"status": "success", "message": f"Updated stats for {len(player_ids)} players"}
+            
+        except Exception as e:
+            logger.error(f"Error updating transfer linked players stats: {e}")
+            raise Exception(f"Failed to update player stats: {str(e)}")
+
 # Example usage:
 async def main():
     """Example of how to use the API client."""

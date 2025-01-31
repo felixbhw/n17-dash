@@ -1,0 +1,36 @@
+{
+  "player_id": 437549,
+  "canonical_name": "Daniel Batty",
+  "transfer_status": "here we go!",
+  "timeline": [
+    {
+      "event_type": "transfer announcement",
+      "details": "Dan Batty is set to join Tottenham's Under-21s team.",
+      "confidence": 75,
+      "date": "2025-01-30T22:09:35.475301",
+      "news_ids": [
+        "r-202501302208-1idvlgq"
+      ]
+    },
+    {
+      "event_type": "medical",
+      "details": "Medical ongoing for Daniel Batty",
+      "confidence": 75,
+      "date": "2025-01-30T22:09:44.488298",
+      "news_ids": [
+        "r-202501302208-1idtrag"
+      ]
+    }
+  ],
+  "related_clubs": [
+    {
+      "name": "Tottenham",
+      "role": "destination"
+    },
+    {
+      "name": "Manchester City",
+      "role": "current"
+    }
+  ],
+  "direction": "incoming"
+}

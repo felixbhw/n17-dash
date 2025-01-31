@@ -1,27 +1,27 @@
 {
   "player": {
-    "id": 162552,
-    "name": "D. Scarlett",
-    "firstname": "Dane Pharrell",
-    "lastname": "Scarlett",
-    "age": 21,
+    "id": 270510,
+    "name": "M. Tel",
+    "firstname": "Mathys Henri",
+    "lastname": "Tel",
+    "age": 20,
     "birth": {
-      "date": "2004-03-24",
-      "place": null,
-      "country": "England"
+      "date": "2005-04-27",
+      "place": "Sarcelles",
+      "country": "France"
     },
-    "nationality": "England",
-    "height": "180 cm",
-    "weight": "76 kg",
+    "nationality": "France",
+    "height": "183 cm",
+    "weight": "77 kg",
     "injured": false,
-    "photo": "https://media.api-sports.io/football/players/162552.png"
+    "photo": "https://media.api-sports.io/football/players/270510.png"
   },
   "statistics": [
     {
       "team": {
-        "id": 8190,
-        "name": "England U21",
-        "logo": "https://media.api-sports.io/football/teams/8190.png"
+        "id": 8194,
+        "name": "France U21",
+        "logo": "https://media.api-sports.io/football/teams/8194.png"
       },
       "league": {
         "id": 850,
@@ -32,25 +32,25 @@
         "season": 2025
       },
       "games": {
-        "appearences": 3,
-        "lineups": 0,
-        "minutes": 63,
+        "appearences": 5,
+        "lineups": 1,
+        "minutes": 152,
         "number": null,
         "position": "Attacker",
         "rating": null,
         "captain": false
       },
       "substitutes": {
-        "in": 3,
-        "out": 0,
-        "bench": 3
+        "in": 4,
+        "out": 1,
+        "bench": 4
       },
       "shots": {
         "total": null,
         "on": null
       },
       "goals": {
-        "total": 1,
+        "total": 2,
         "conceded": null,
         "assists": null,
         "saves": null

@@ -1,0 +1,22 @@
+{
+  "player_id": 343311,
+  "canonical_name": "Stefanos Tzimas",
+  "transfer_status": "rumors",
+  "timeline": [],
+  "related_clubs": [
+    {
+      "name": "Brighton",
+      "role": "interested"
+    },
+    {
+      "name": "Tottenham",
+      "role": "interested"
+    },
+    {
+      "name": "Aston Villa",
+      "role": "interested"
+    }
+  ],
+  "direction": "incoming",
+  "last_updated": "2025-01-31T10:22:07.296289"
+}

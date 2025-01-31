@@ -1,0 +1,37 @@
+{
+  "player_id": 19209,
+  "canonical_name": "Fikayo Tomori",
+  "transfer_status": "developing",
+  "timeline": [
+    {
+      "event_type": "transfer speculation",
+      "details": "Tottenham has shown interest in Fikayo Tomori through intermediaries.",
+      "confidence": 60,
+      "date": "2025-01-30T22:09:49.508890",
+      "news_ids": [
+        "r-202501302208-1idqw40"
+      ]
+    },
+    {
+      "event_type": "transfer speculation",
+      "details": "Tottenham is insisting on loaning Fikayo Tomori and have overtaken Aston Villa in the race.",
+      "confidence": 70,
+      "date": "2025-01-31T10:14:35.315137",
+      "news_ids": [
+        "r-202501311014-1iegy06"
+      ]
+    }
+  ],
+  "related_clubs": [
+    {
+      "name": "Tottenham",
+      "role": "interested"
+    },
+    {
+      "name": "Aston Villa",
+      "role": "interested"
+    }
+  ],
+  "direction": "incoming",
+  "last_updated": "2025-01-31T10:21:47.542059"
+}

@@ -1,0 +1,105 @@
+{
+  "player_id": 270510,
+  "canonical_name": "Mathys Tel",
+  "transfer_status": "developing",
+  "timeline": [
+    {
+      "event_type": "meeting",
+      "details": "Tottenham presented their project to Mathys Tel and his agent, including a direct meeting with Bayern.",
+      "confidence": 85,
+      "date": "2025-01-30T22:08:15.294701",
+      "news_ids": [
+        "r-202501302208-1ie1y6t"
+      ]
+    },
+    {
+      "event_type": "talks",
+      "details": "Manchester United held new talks with Mathys Tel's agent regarding a potential loan move.",
+      "confidence": 75,
+      "date": "2025-01-30T22:09:31.173027",
+      "news_ids": [
+        "r-202501302208-1idxc3o"
+      ]
+    },
+    {
+      "event_type": "agreement",
+      "details": "Tottenham and Bayern have reached an agreement for a transfer of striker Mathys Tel around \u20ac60 million.",
+      "confidence": 90,
+      "date": "2025-01-30T22:10:06.193699",
+      "news_ids": [
+        "r-202501302208-1idpd7x"
+      ]
+    },
+    {
+      "event_type": "agreement",
+      "details": "Tottenham and Bayern Munich have reached a verbal agreement on a \u00a350m transfer for Mathys Tel.",
+      "confidence": 90,
+      "date": "2025-01-31T09:44:31.812017",
+      "news_ids": [
+        "r-202501310943-1iedi2r"
+      ]
+    },
+    {
+      "event_type": "talks",
+      "details": "Manchester United and Bayern think Tel would rather go on loan than permanent deals. Spurs pushing for a permanent move.",
+      "confidence": 75,
+      "date": "2025-01-31T09:44:37.249959",
+      "news_ids": [
+        "r-202501310943-1iebx6a"
+      ]
+    },
+    {
+      "event_type": "meeting",
+      "details": "Tottenham chairman Daniel Levy has arrived in Munich today in order to accelerate talks for Mathys Tel.",
+      "confidence": 85,
+      "date": "2025-01-31T09:52:52.568140",
+      "news_ids": [
+        "r-202501310948-1iegdpn"
+      ]
+    },
+    {
+      "event_type": "meeting",
+      "details": "Tottenham chairman Daniel Levy has arrived in Munich today in order to accelerate talks for Mathys Tel. Agreement already done with Bayern, face to face talks now with Tel and his agent. Spurs trying to push as they\u2019re aware of competition from Premier League clubs.",
+      "confidence": 85,
+      "date": "2025-01-31T09:52:57.074130",
+      "news_ids": [
+        "r-202501310948-1iegdnz"
+      ]
+    }
+  ],
+  "related_clubs": [
+    {
+      "name": "Tottenham",
+      "role": "interested"
+    },
+    {
+      "name": "Bayern Munich",
+      "role": "current"
+    },
+    {
+      "name": "Manchester United",
+      "role": "interested"
+    },
+    {
+      "name": "Arsenal",
+      "role": "interested"
+    },
+    {
+      "name": "Chelsea",
+      "role": "interested"
+    },
+    {
+      "name": "Frankfurt",
+      "role": "interested"
+    },
+    {
+      "name": "Aston Villa",
+      "role": "interested"
+    },
+    {
+      "name": "Al Ahli",
+      "role": "interested"
+    }
+  ],
+  "direction": "incoming"
+}

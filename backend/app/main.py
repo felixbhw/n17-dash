@@ -27,6 +27,9 @@ logging.getLogger("openai").setLevel(logging.WARNING)
 # Create logger for this module
 logger = logging.getLogger(__name__)
 
+# Load environment variables
+load_dotenv()
+
 app = FastAPI(title="N17 Dashboard API")
 
 # CORS middleware configuration
@@ -42,15 +45,12 @@ app.add_middleware(
 PROJECT_ROOT = Path(__file__).parent.parent.parent
 
 # Mount static files and templates
-app.mount("/static", StaticFiles(directory=str(PROJECT_ROOT / "frontend" / "src")), name="static")
+app.mount("/static", StaticFiles(directory=str(PROJECT_ROOT / "frontend")), name="static")
 
 # Include routers
 app.include_router(api.router, prefix="/api")  # API routes first
 app.include_router(pages.router)  # Then page routes
 app.include_router(views.router)  # Finally template routes
-
-# Load environment variables
-load_dotenv()
 
 # Initialize services
 reddit_service = RedditService()
@@ -69,4 +69,7 @@ async def shutdown_event():
     await background_tasks.stop()
 
 if __name__ == "__main__":
-    uvicorn.run("app.main:app", host="0.0.0.0", port=8000, reload=True)
+    # Get port from environment variable, default to 8000
+    port = int(os.getenv("PORT", 8000))
+    logger.info(f"Starting server on port {port}")
+    uvicorn.run("app.main:app", host="0.0.0.0", port=port, reload=True)

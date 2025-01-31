@@ -1,0 +1,169 @@
+{
+  "player": {
+    "id": 343311,
+    "name": "S. Tzimas",
+    "firstname": "Stefanos",
+    "lastname": "Tzimas",
+    "age": 19,
+    "birth": {
+      "date": "2006-01-06",
+      "place": null,
+      "country": "Greece"
+    },
+    "nationality": "Greece",
+    "height": "186 cm",
+    "weight": "77 kg",
+    "injured": false,
+    "photo": "https://media.api-sports.io/football/players/343311.png"
+  },
+  "statistics": [
+    {
+      "team": {
+        "id": 8198,
+        "name": "Greece U21",
+        "logo": "https://media.api-sports.io/football/teams/8198.png"
+      },
+      "league": {
+        "id": 850,
+        "name": "UEFA U21 Championship - Qualification",
+        "country": "World",
+        "logo": "https://media.api-sports.io/football/leagues/850.png",
+        "flag": null,
+        "season": 2025
+      },
+      "games": {
+        "appearences": 4,
+        "lineups": 2,
+        "minutes": 149,
+        "number": null,
+        "position": "Attacker",
+        "rating": null,
+        "captain": false
+      },
+      "substitutes": {
+        "in": 2,
+        "out": 2,
+        "bench": 2
+      },
+      "shots": {
+        "total": null,
+        "on": null
+      },
+      "goals": {
+        "total": 0,
+        "conceded": null,
+        "assists": null,
+        "saves": null
+      },
+      "passes": {
+        "total": null,
+        "key": null,
+        "accuracy": null
+      },
+      "tackles": {
+        "total": null,
+        "blocks": null,
+        "interceptions": null
+      },
+      "duels": {
+        "total": null,
+        "won": null
+      },
+      "dribbles": {
+        "attempts": null,
+        "success": null,
+        "past": null
+      },
+      "fouls": {
+        "drawn": null,
+        "committed": null
+      },
+      "cards": {
+        "yellow": 1,
+        "yellowred": 0,
+        "red": 0
+      },
+      "penalty": {
+        "won": null,
+        "commited": null,
+        "scored": null,
+        "missed": null,
+        "saved": null
+      }
+    },
+    {
+      "team": {
+        "id": 10364,
+        "name": "Greece U19",
+        "logo": "https://media.api-sports.io/football/teams/10364.png"
+      },
+      "league": {
+        "id": 893,
+        "name": "UEFA U19 Championship - Qualification",
+        "country": "World",
+        "logo": "https://media.api-sports.io/football/leagues/893.png",
+        "flag": null,
+        "season": 2025
+      },
+      "games": {
+        "appearences": 0,
+        "lineups": 0,
+        "minutes": 0,
+        "number": null,
+        "position": "Attacker",
+        "rating": null,
+        "captain": false
+      },
+      "substitutes": {
+        "in": 0,
+        "out": 0,
+        "bench": 0
+      },
+      "shots": {
+        "total": null,
+        "on": null
+      },
+      "goals": {
+        "total": 0,
+        "conceded": null,
+        "assists": null,
+        "saves": null
+      },
+      "passes": {
+        "total": null,
+        "key": null,
+        "accuracy": null
+      },
+      "tackles": {
+        "total": null,
+        "blocks": null,
+        "interceptions": null
+      },
+      "duels": {
+        "total": null,
+        "won": null
+      },
+      "dribbles": {
+        "attempts": null,
+        "success": null,
+        "past": null
+      },
+      "fouls": {
+        "drawn": null,
+        "committed": null
+      },
+      "cards": {
+        "yellow": 0,
+        "yellowred": 0,
+        "red": 0
+      },
+      "penalty": {
+        "won": null,
+        "commited": null,
+        "scored": null,
+        "missed": null,
+        "saved": null
+      }
+    }
+  ]
+}

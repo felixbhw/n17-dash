@@ -4,11 +4,18 @@ from pathlib import Path
 import os
 import logging
 from ..background import get_background_tasks
-from typing import Dict
+from typing import Dict, Any
+from datetime import datetime, timedelta
+from ..services.reddit_service import RedditService
+from ..services.llm_service import LLMService
 
 router = APIRouter()
+reddit_service = RedditService()
+llm_service = LLMService()
 
 logger = logging.getLogger(__name__)
+
+DATA_DIR = Path(__file__).parent.parent.parent / 'data'
 
 # Helper function to load JSON data
 def load_json_file(file_path: Path) -> dict:
@@ -41,13 +48,19 @@ async def get_squad():
         for file_path in files:
             logger.info(f"Reading player file: {file_path}")
             player_data = load_json_file(file_path)
+            
+            # Skip players that are explicitly marked as not squad players
+            if player_data.get("is_squad_player") is False:
+                continue
+                
             players.append({
                 "id": player_data.get("id"),
                 "name": player_data.get("name"),
                 "number": player_data.get("number"),
                 "position": player_data.get("position"),
                 "age": player_data.get("age"),
-                "photo": player_data.get("photo")
+                "photo": player_data.get("photo"),
+                "is_squad_player": player_data.get("is_squad_player", True)  # Default to True for legacy data
             })
         return players
     except Exception as e:
@@ -153,83 +166,274 @@ async def update_squad():
 
 @router.get("/links/players")
 async def get_player_links():
-    """Get all active player transfer links."""
+    """Get all player transfer links"""
+    try:
+        players = []
+        links_dir = DATA_DIR / 'links'
+        
+        # Read all player files
+        for player_file in links_dir.glob('player_*.json'):
+            try:
+                with open(player_file) as f:
+                    player_data = json.load(f)
+                    players.append(player_data)
+            except Exception as e:
+                logger.error(f"Error processing player file {player_file}: {e}")
+                continue
+        
+        return players
+        
+    except Exception as e:
+        logger.error(f"Error getting player links: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/links/players/stats")
+async def get_transfer_linked_players_stats():
+    """Get stats for all players with transfer links"""
+    try:
+        player_stats = {}
+        links_dir = DATA_DIR / 'links'
+        stats_dir = DATA_DIR / 'stats'
+        
+        # First get all transfer-linked players
+        for player_file in links_dir.glob('player_*.json'):
+            try:
+                with open(player_file) as f:
+                    player_data = json.load(f)
+                    player_id = player_data.get('player_id')
+                    
+                    if player_id:
+                        # Try to get stats for this player
+                        stats_file = stats_dir / f"player_{player_id}.json"
+                        if stats_file.exists():
+                            with open(stats_file) as f:
+                                stats_data = json.load(f)
+                                player_stats[player_id] = {
+                                    'player': stats_data.get('player', {}),
+                                    'statistics': stats_data.get('statistics', [])
+                                }
+                        else:
+                            logger.warning(f"No stats found for player {player_id}")
+                            
+            except Exception as e:
+                logger.error(f"Error processing player file {player_file}: {e}")
+                continue
+        
+        return player_stats
+        
+    except Exception as e:
+        logger.error(f"Error getting player stats: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/links/player/{player_id}")
+async def get_player_link_details(player_id: int):
+    """Get detailed transfer information for a specific player"""
     base_dir = Path(__file__).parent.parent.parent
-    links_dir = base_dir / "data" / "links"
+    player_file = base_dir / "data" / "links" / f"player_{player_id}.json"
     
-    if not links_dir.exists():
-        raise HTTPException(status_code=404, detail="Links directory not found")
+    if not player_file.exists():
+        raise HTTPException(status_code=404, detail="Player link data not found")
     
-    # Get all link files
-    link_files = list(links_dir.glob("link_*.json"))
-    
-    # Process each link file and combine player information
-    players_dict = {}  # Use dict to avoid duplicates
-    
-    for file_path in link_files:
-        try:
-            link_data = load_json_file(file_path)
-            for player in link_data.get("players", []):
-                player_id = player.get("id")
-                if player_id not in players_dict:
-                    players_dict[player_id] = {
-                        "id": player_id,
-                        "name": player.get("name"),
-                        "current_club": player.get("current_club"),
-                        "direction": link_data.get("direction"),
-                        "transfer_type": link_data.get("transfer_type"),
-                        "latest_price": link_data.get("price"),
-                        "links_count": 1,
-                        "last_updated": link_data.get("last_updated")
-                    }
-                else:
-                    # Update if this link is more recent
-                    existing = players_dict[player_id]
-                    if link_data.get("last_updated") > existing["last_updated"]:
-                        existing.update({
-                            "direction": link_data.get("direction"),
-                            "transfer_type": link_data.get("transfer_type"),
-                            "latest_price": link_data.get("price"),
-                            "last_updated": link_data.get("last_updated")
-                        })
-                    existing["links_count"] += 1
-        except Exception as e:
-            logger.error(f"Error processing link file {file_path}: {str(e)}")
-            continue
-    
-    return list(players_dict.values())
+    try:
+        with open(player_file) as f:
+            data = json.load(f)
+            
+        # Load referenced news articles
+        news_dir = base_dir / "data" / "news"
+        news_items = {}
+        
+        for event in data['timeline']:
+            for news_id in event['news_ids']:
+                if news_id not in news_items:
+                    news_file = news_dir / f"{news_id}.json"
+                    if news_file.exists():
+                        with open(news_file) as f:
+                            news_data = json.load(f)
+                            news_items[news_id] = {
+                                "title": news_data['title'],
+                                "url": news_data['url'],
+                                "timestamp": news_data['timestamp']
+                            }
+        
+        return {
+            **data,
+            "news_items": news_items
+        }
+        
+    except Exception as e:
+        logger.error(f"Error loading player link data: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 @router.get("/links/events")
 async def get_transfer_events():
-    """Get recent transfer-related events."""
-    base_dir = Path(__file__).parent.parent.parent
-    news_dir = base_dir / "data" / "news"
+    """Get all transfer timeline events"""
+    try:
+        events = []
+        links_dir = DATA_DIR / 'links'
+        
+        # Read all player files and extract events
+        for player_file in links_dir.glob('player_*.json'):
+            try:
+                with open(player_file) as f:
+                    player_data = json.load(f)
+                    
+                    # Add each timeline event
+                    for event in player_data.get('timeline', []):
+                        events.append({
+                            'date': event.get('date', datetime.now().isoformat()),
+                            'player_id': player_data.get('player_id'),
+                            'player_name': player_data.get('canonical_name', 'Unknown'),
+                            'event_type': event.get('event_type', ''),
+                            'details': event.get('details', ''),
+                            'confidence': event.get('confidence'),
+                            'news_ids': event.get('news_ids', [])  # Include news_ids in response
+                        })
+            except Exception as e:
+                logger.error(f"Error processing events from {player_file}: {e}")
+                continue
+                
+        # Sort by date descending
+        events.sort(key=lambda x: x['date'], reverse=True)
+        return events
+        
+    except Exception as e:
+        logger.error(f"Error getting transfer events: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/reddit/historical/{days}")
+async def fetch_historical_posts(days: int) -> Dict[str, Any]:
+    """Fetch historical transfer posts from r/coys
     
-    if not news_dir.exists():
-        raise HTTPException(status_code=404, detail="News directory not found")
+    Args:
+        days: Number of days to look back
+        
+    Returns:
+        Dict with status and stats about processed posts
+    """
+    if days < 1 or days > 30:
+        raise HTTPException(
+            status_code=400,
+            detail="Days must be between 1 and 30"
+        )
     
-    # Get all news files
-    news_files = list(news_dir.glob("*.json"))
-    events = []
-    
-    for file_path in news_files:
-        try:
-            news_data = load_json_file(file_path)
-            # Only include transfer-related news
-            if news_data.get("type") == "transfer":
-                events.append({
-                    "date": news_data.get("date"),
-                    "player_id": news_data.get("related_players", [None])[0],  # Get first player if any
-                    "player_name": news_data.get("title", "").split(":")[0].strip(),  # Extract player name from title
-                    "event_type": news_data.get("type"),
-                    "details": news_data.get("content"),
-                    "source": news_data.get("source"),
-                    "source_url": news_data.get("url")
-                })
-        except Exception as e:
-            logger.error(f"Error processing news file {file_path}: {str(e)}")
-            continue
-    
-    # Sort by date descending
-    events.sort(key=lambda x: x.get("date", ""), reverse=True)
-    return events
+    stats = await reddit_service.fetch_historical(days)
+    return {
+        "status": "success",
+        "stats": stats
+    }
+
+@router.post("/links/players/update-stats")
+async def update_transfer_linked_players_stats():
+    """Update stats for all players with transfer links from API-Football"""
+    try:
+        # Use the existing llm_service instance
+        result = await llm_service.football_api.update_transfer_linked_players_stats()
+        return result
+    except Exception as e:
+        logger.error(f"Error updating transfer linked players stats: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.put("/links/player/{player_id}")
+async def update_player_link(player_id: int, update_data: dict):
+    """Update transfer link information for a player"""
+    try:
+        player_file = DATA_DIR / 'links' / f"player_{player_id}.json"
+        
+        if not player_file.exists():
+            raise HTTPException(status_code=404, detail="Player link data not found")
+        
+        # Read existing data
+        with open(player_file) as f:
+            current_data = json.load(f)
+        
+        # Update allowed fields
+        allowed_fields = ['transfer_status', 'direction', 'related_clubs', 'timeline']
+        for field in allowed_fields:
+            if field in update_data:
+                current_data[field] = update_data[field]
+        
+        # Update timestamp
+        current_data['last_updated'] = datetime.now().isoformat()
+        
+        # Save updated data
+        with open(player_file, 'w') as f:
+            json.dump(current_data, f, indent=2)
+        
+        return {"status": "success", "message": "Player link data updated"}
+        
+    except Exception as e:
+        logger.error(f"Error updating player link data: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/links/player/{player_id}/timeline")
+async def add_timeline_event(player_id: int, event_data: dict):
+    """Add a new timeline event for a player"""
+    try:
+        player_file = DATA_DIR / 'links' / f"player_{player_id}.json"
+        
+        if not player_file.exists():
+            raise HTTPException(status_code=404, detail="Player link data not found")
+        
+        # Read existing data
+        with open(player_file) as f:
+            current_data = json.load(f)
+        
+        # Create new event
+        new_event = {
+            "event_type": event_data.get("event_type", "update"),
+            "details": event_data.get("details", ""),
+            "confidence": event_data.get("confidence", 50),
+            "date": datetime.now().isoformat(),
+            "news_ids": event_data.get("news_ids", [])
+        }
+        
+        # Add to timeline
+        if 'timeline' not in current_data:
+            current_data['timeline'] = []
+        current_data['timeline'].append(new_event)
+        
+        # Update timestamp
+        current_data['last_updated'] = datetime.now().isoformat()
+        
+        # Save updated data
+        with open(player_file, 'w') as f:
+            json.dump(current_data, f, indent=2)
+        
+        return {"status": "success", "message": "Timeline event added"}
+        
+    except Exception as e:
+        logger.error(f"Error adding timeline event: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.delete("/links/player/{player_id}/timeline/{event_index}")
+async def delete_timeline_event(player_id: int, event_index: int):
+    """Delete a timeline event for a player"""
+    try:
+        player_file = DATA_DIR / 'links' / f"player_{player_id}.json"
+        
+        if not player_file.exists():
+            raise HTTPException(status_code=404, detail="Player link data not found")
+        
+        # Read existing data
+        with open(player_file) as f:
+            current_data = json.load(f)
+        
+        # Check if timeline exists and index is valid
+        if 'timeline' not in current_data or event_index >= len(current_data['timeline']):
+            raise HTTPException(status_code=404, detail="Timeline event not found")
+        
+        # Remove event
+        current_data['timeline'].pop(event_index)
+        
+        # Update timestamp
+        current_data['last_updated'] = datetime.now().isoformat()
+        
+        # Save updated data
+        with open(player_file, 'w') as f:
+            json.dump(current_data, f, indent=2)
+        
+        return {"status": "success", "message": "Timeline event deleted"}
+        
+    except Exception as e:
+        logger.error(f"Error deleting timeline event: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))

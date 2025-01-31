@@ -1,0 +1,39 @@
+{
+  "player_id": 393195,
+  "canonical_name": "Will Lankshear",
+  "transfer_status": "developing",
+  "timeline": [
+    {
+      "event_type": "loan move",
+      "details": "Will Lankshear is set to head out on loan with multiple clubs interested.",
+      "confidence": 75,
+      "date": "2025-01-30T22:09:24.092978",
+      "news_ids": [
+        "r-202501302208-1idz9il"
+      ]
+    }
+  ],
+  "related_clubs": [
+    {
+      "name": "Burnley",
+      "role": "interested"
+    },
+    {
+      "name": "Middlesbrough",
+      "role": "interested"
+    },
+    {
+      "name": "West Brom",
+      "role": "interested"
+    },
+    {
+      "name": "Cardiff",
+      "role": "interested"
+    },
+    {
+      "name": "Luton",
+      "role": "interested"
+    }
+  ],
+  "direction": "outgoing"
+}

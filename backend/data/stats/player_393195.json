@@ -1,0 +1,77 @@
+{
+  "player": {
+    "id": 393195,
+    "name": "Radu Dragusin",
+    "firstname": "Radu",
+    "lastname": "Dragusin",
+    "age": 21,
+    "birth": {
+      "date": "2002-02-03",
+      "place": "Bucharest",
+      "country": "Romania"
+    },
+    "nationality": "Romania",
+    "height": "191 cm",
+    "weight": "80 kg",
+    "photo": "https://media.api-sports.io/football/players/393195.png"
+  },
+  "statistics": [
+    {
+      "team": {
+        "id": 47,
+        "name": "Tottenham",
+        "logo": "https://media.api-sports.io/football/teams/47.png"
+      },
+      "league": {
+        "id": 39,
+        "name": "Premier League",
+        "country": "England",
+        "logo": "https://media.api-sports.io/football/leagues/39.png",
+        "season": 2023
+      },
+      "games": {
+        "appearences": 1,
+        "lineups": 0,
+        "minutes": 15,
+        "number": 6,
+        "position": "Defender",
+        "rating": "6.8"
+      },
+      "goals": {
+        "total": 0,
+        "assists": 0
+      },
+      "shots": {
+        "total": 0,
+        "on": 0
+      },
+      "passes": {
+        "total": 12,
+        "key": 0,
+        "accuracy": 85
+      },
+      "tackles": {
+        "total": 2,
+        "blocks": 0,
+        "interceptions": 1
+      },
+      "duels": {
+        "total": 3,
+        "won": 2
+      },
+      "fouls": {
+        "drawn": 0,
+        "committed": 1
+      },
+      "cards": {
+        "yellow": 0,
+        "red": 0
+      },
+      "penalty": {
+        "scored": 0,
+        "missed": 0,
+        "saved": null
+      }
+    }
+  ]
+} 
